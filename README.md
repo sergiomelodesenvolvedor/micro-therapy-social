@@ -38,9 +38,9 @@ App web que permite usuários postarem pensamentos negativos/ansiosos e recebere
 - **OpenAI API** (IA para respostas)
 
 ### Frontend
-- **React** ou **Svelte** (SPA)
-- **TailwindCSS** (estilos)
-- **Zustand** (estado)
+- **HTML5** (estrutura)
+- **CSS3** (estilos + animações)
+- **JavaScript** (vanilla, sem frameworks)
 
 ### Infraestrutura
 - **Railway/Render** (deploy backend)
@@ -88,8 +88,8 @@ App web que permite usuários postarem pensamentos negativos/ansiosos e recebere
 
 ```
 ┌─────────────────────────────────────────┐
-│        Frontend (React/Svelte)          │
-│  localhost:3000                         │
+│     Frontend (HTML/CSS/JS Puro)         │
+│  localhost:3000 (Live Server)           │
 └────────────────┬────────────────────────┘
                  │
 ┌────────────────▼────────────────────────┐
@@ -121,9 +121,8 @@ cd micro-therapy-social
 cd backend
 npm install
 
-# Frontend
-cd ../frontend
-npm install
+# Frontend (HTML/CSS/JS puro, sem dependências)
+# Apenas abra index.html no navegador ou use Live Server
 ```
 
 ### 3. Configurar variáveis de ambiente
@@ -141,12 +140,13 @@ VITE_STRIPE_KEY=xxx
 cd backend
 npm run dev
 
-# Terminal 2: Frontend
+# Terminal 2: Frontend (abra com Live Server ou simplesmente abra index.html)
 cd frontend
-npm run dev
+# Clique direito em index.html > Open with Live Server
+# OU abra diretamente no navegador: file:///C:/path/to/frontend/index.html
 ```
 
-Acesse: http://localhost:3000
+Acesse: http://localhost:5500 (Live Server) ou file:///...
 
 ---
 
@@ -167,13 +167,18 @@ micro-therapy-social/
 │   ├── package.json
 │   └── .env.example
 ├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   └── styles/
-│   ├── package.json
-│   └── vite.config.js
+│   ├── index.html
+│   ├── pages/
+│   │   ├── feed.html
+│   │   ├── perfil.html
+│   │   └── ranking.html
+│   ├── css/
+│   │   ├── main.css
+│   │   └── components.css
+│   └── js/
+│       ├── app.js
+│       ├── api.js
+│       └── utils.js
 ├── docs/
 │   ├── USER_STORIES.md
 │   ├── ARCHITECTURE.md
@@ -190,15 +195,13 @@ micro-therapy-social/
 Criar arquivo `.env.local`:
 
 ```env
-# Supabase
-VITE_SUPABASE_URL=https://xxxx.supabase.co
-VITE_SUPABASE_ANON_KEY=xxxx
-
-# Backend
+# Supabase (backend)
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_ANON_KEY=xxxx
 SUPABASE_SERVICE_KEY=xxxx
 
 # Stripe
-VITE_STRIPE_PUBLIC_KEY=pk_test_xxxx
+STRIPE_PUBLIC_KEY=pk_test_xxxx
 STRIPE_SECRET_KEY=sk_test_xxxx
 
 # OpenAI (Sprint 8+)

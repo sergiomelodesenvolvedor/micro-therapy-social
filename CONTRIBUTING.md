@@ -180,25 +180,22 @@ fetch('/api/posts')
   .then(d => console.log(d));
 ```
 
-### React
+### HTML/CSS/JS
 ```javascript
 // ✅ Bom
-function PostCard({ post, onLike }) {
-  const [liked, setLiked] = useState(false);
-
-  const handleLike = useCallback(() => {
-    setLiked(!liked);
-    onLike(post.id);
-  }, [liked, onLike, post.id]);
-
-  return <div onClick={handleLike}>{post.content}</div>;
+function createPostCard(post) {
+  const card = document.createElement('div');
+  card.className = 'post-card';
+  card.innerHTML = `
+    <p class="post-content">${escapeHtml(post.content)}</p>
+    <button onclick="likePost(${post.id})">❤️ Curtir</button>
+  `;
+  return card;
 }
 
 // ❌ Evitar
-function PostCard(props) {
-  return <div onClick={() => props.onLike(props.post.id)}>
-    {props.post.content}
-  </div>;
+function createPostCard(post) {
+  return '<div onclick="likePost(' + post.id + ')">' + post.content + '</div>';
 }
 ```
 
@@ -272,15 +269,19 @@ backend/
 └── package.json
 
 frontend/
-├── src/
-│   ├── pages/        # Componentes de página
-│   ├── components/   # Componentes reutilizáveis
-│   ├── hooks/        # Custom React hooks
-│   ├── services/     # Chamadas de API
-│   ├── store/        # Estado global
-│   └── styles/       # CSS global
-├── tests/            # Testes
-└── package.json
+├── index.html        # Página principal
+├── pages/            # Outras páginas HTML
+│   ├── feed.html
+│   ├── perfil.html
+│   └── ranking.html
+├── css/              # Estilos CSS
+│   ├── main.css
+│   └── components.css
+├── js/               # JavaScript
+│   ├── app.js        # Lógica principal
+│   ├── api.js        # Chamadas de API
+│   └── utils.js      # Funções auxiliares
+└── assets/           # Imagens, fontes, etc
 ```
 
 ---
