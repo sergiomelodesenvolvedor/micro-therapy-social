@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint Tracker - Micro Therapy Social</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f093fb;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #f077f0;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff5252;
+        }
+
+        .sprints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .sprint-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #ccc;
+        }
+
+        .sprint-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .sprint-card.not-started {
+            border-left-color: #95a5a6;
+        }
+
+        .sprint-card.in-progress {
+            border-left-color: #f39c12;
+        }
+
+        .sprint-card.completed {
+            border-left-color: #27ae60;
+        }
+
+        .sprint-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sprint-number {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .sprint-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-not-started {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .badge-in-progress {
+            background: #f39c12;
+            color: white;
+        }
+
+        .badge-completed {
+            background: #27ae60;
+            color: white;
+        }
+
+        .sprint-content {
+            padding: 20px;
+        }
+
+        .sprint-info {
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .sprint-info label {
+            color: #667eea;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .sprint-info p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .timer-display {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-display .time {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .timer-display .label {
+            font-size: 0.85em;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .status-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .status-btn {
+            padding: 8px 12px;
+            font-size: 0.85em;
+            border: 2px solid #ddd;
+            background: white;
+            color: #666;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .status-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .status-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .sprint-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .sprint-actions button {
+            padding: 10px;
+            font-size: 0.9em;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+
+        .btn-timer-start {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-timer-start:hover {
+            background: #229954;
+        }
+
+        .btn-timer-stop {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-timer-stop:hover {
+            background: #c0392b;
+        }
+
+        .btn-timer-reset {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-timer-reset:hover {
+            background: #7f8c8d;
+        }
+
+        .total-hours {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .total-hours h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .total-hours .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .sprints-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .status-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .sprint-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .export-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .export-text {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border: 2px dashed #ddd;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .close-modal {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .close-modal:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-copy {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #2980b9;
+        }
+
+        .info-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #f093fb;
+            padding-bottom: 10px;
+        }
+
+        .info-section h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .info-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .info-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .info-section li {
+            color: #555;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .timeline-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item p {
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #f093fb;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            color: #f093fb;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .kanban-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .kanban-column {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 600px;
+        }
+
+        .kanban-column h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+        }
+
+        .kanban-column-count {
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+        }
+
+        .kanban-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .kanban-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .kanban-card.todo {
+            border-left-color: #95a5a6;
+        }
+
+        .kanban-card.in-progress {
+            border-left-color: #f39c12;
+        }
+
+        .kanban-card.done {
+            border-left-color: #27ae60;
+            opacity: 0.8;
+        }
+
+        .kanban-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .kanban-card-title {
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+            font-size: 0.95em;
+        }
+
+        .kanban-card-hours {
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 5px;
+        }
+
+        .kanban-card-description {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .kanban-card-status {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .kanban-status-btn {
+            padding: 5px 12px;
+            font-size: 0.75em;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .kanban-status-btn:hover {
+            border-color: #667eea;
+        }
+
+        .kanban-status-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .sprint-selector {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sprint-selector button {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .sprint-selector button:hover {
+            border-color: #667eea;
+        }
+
+        .sprint-selector button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .kanban-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .task-details {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #666;
+            display: none;
+        }
+
+        .task-details.show {
+            display: block;
+        }
+
+        .task-timer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-timer-display {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .task-timer-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .task-timer-btn {
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.2s;
+        }
+
+        .task-timer-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .task-timer-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .sprint-summary {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .sprint-summary h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .sprint-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .sprint-stat {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 4px solid #f093fb;
+        }
+
+        .sprint-stat-label {
+            font-size: 0.8em;
+            color: #999;
+        }
+
+        .sprint-stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .sprint-details-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sprint-details-box h3 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sprint-icon {
+            font-size: 2em;
+        }
+
+        .sprint-objective {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .sprint-objective-label {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .sprint-objective-text {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .sprint-checklist {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .sprint-checklist h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .sprint-checklist ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style: none;
+        }
+
+        .sprint-checklist li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .sprint-checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .sprint-deliverables {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .sprint-deliverables h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .sprint-deliverables ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style: none;
+        }
+
+        .sprint-deliverables li {
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .sprint-deliverables li:before {
+            content: "📦";
+            position: absolute;
+            left: 0;
+        }
+
+        .task-info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .task-info-icon:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .task-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .task-details-modal.show {
+            display: flex;
+        }
+
+        .task-details-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .task-details-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .task-details-close:hover {
+            background: #e0e0e0;
+            transform: rotate(90deg);
+        }
+
+        .task-details-title {
+            color: #667eea;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            padding-right: 40px;
+        }
+
+        .task-details-hours {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .task-details-description {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .task-details-description h4 {
+            color: #667eea;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .task-details-tips {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+        }
+
+        .task-details-tips h4 {
+            color: #667eea;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .task-details-tips ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .task-details-tips li {
+            margin: 8px 0;
+            line-height: 1.5;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Sprint Tracker - Micro Therapy Social</h1>
+            <p>Plataforma gamificada de micro-intervenções para saúde mental</p>
+            <p style="font-size: 0.95em; color: #999; margin-top: 10px;">Previsão: 12 sprints | 24 semanas | ~56h por sprint | Início: 2025-12-08 | Fim: 2026-05-25</p>
+        </header>
+
+        <!-- Info Sections Tabs -->
+        <div class="info-section">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('overview')">📋 Visão Geral</button>
+                <button class="tab-btn" onclick="switchTab('timeline')">📅 Cronograma</button>
+                <button class="tab-btn" onclick="switchTab('kanban')">🎯 Board Kanban</button>
+                <button class="tab-btn" onclick="switchTab('routine')">⏰ Rotina Diária</button>
+                <button class="tab-btn" onclick="switchTab('risks')">⚠️ Riscos</button>
+                <button class="tab-btn" onclick="switchTab('backlog')">📝 Backlog</button>
+                <button class="tab-btn" onclick="switchTab('schema')">🗄️ BD</button>
+                <button class="tab-btn" onclick="switchTab('metrics')">📊 Métricas</button>
+                <button class="tab-btn" onclick="switchTab('costs')">💰 Custos</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <h2>📋 Resumo Executivo</h2>
+                <div class="two-column">
+                    <div>
+                        <h3>Projeto</h3>
+                        <p><strong>Micro-Therapy Social</strong> — plataforma gamificada de micro-intervenções para saúde mental.</p>
+                        <h3>Objetivo Final</h3>
+                        <p>MVP robusto + piloto público + base para monetização (assinatura premium) e escalada.</p>
+                    </div>
+                    <div>
+                        <h3>Disponibilidade</h3>
+                        <p>4 horas/dia × 7 dias/semana = <strong>28h/semana</strong></p>
+                        <h3>Duração por Sprint</h3>
+                        <p>2 semanas = <strong>56 horas úteis</strong> por sprint</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Tab -->
+            <div id="timeline" class="tab-content">
+                <h2>📅 Cronograma das Sprints</h2>
+                <div class="timeline" id="timelineContainer"></div>
+            </div>
+
+            <!-- Kanban Tab -->
+            <div id="kanban" class="tab-content">
+                <h2>🎯 Board Kanban - Tarefas por Sprint</h2>
+                <div class="sprint-selector" id="sprintSelector"></div>
+                <div class="kanban-section" id="kanbanBoard"></div>
+            </div>
+
+            <!-- Routine Tab -->
+            <div id="routine" class="tab-content">
+                <h2>⏰ Rotina Diária (4h/dia)</h2>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p><strong>09:00–09:10</strong> — Checar board / abrir ambiente (10 min)</p>
+                    <p><strong>09:10–11:00</strong> — Bloco profundo (1h50)</p>
+                    <p><strong>11:00–11:15</strong> — Pausa curta (15 min)</p>
+                    <p><strong>11:15–13:00</strong> — Bloco de integração/testes/commits (1h45)</p>
+                    <p><strong>13:00</strong> — Encerramento do dia: push, atualizar issues (5–10 min)</p>
+                </div>
+                <p><em>💡 Dica: Ajuste os horários conforme sua preferência; manter dois blocos ajuda o foco.</em></p>
+            </div>
+
+            <!-- Risks Tab -->
+            <div id="risks" class="tab-content">
+                <h2>⚠️ Riscos e Mitigação</h2>
+                <ul>
+                    <li><strong>Baixa adesão inicial:</strong> Usar bots para simular comunidade e bonificar convites.</li>
+                    <li><strong>Abuso / spam:</strong> Rate limits, moderação manual inicialmente.</li>
+                    <li><strong>Custos de IA altos:</strong> Usar heurísticas gratuitas para o core; IA somente no premium.</li>
+                    <li><strong>Privacidade / LGPD:</strong> Minimizar dados coletados, expor políticas e rotas de deleção.</li>
+                    <li><strong>Dependência de serviços free:</strong> Ter plano de backup e export de dados.</li>
+                </ul>
+            </div>
+
+            <!-- Backlog Tab -->
+            <div id="backlog" class="tab-content">
+                <h2>📝 Backlog Essencial (Priorizado)</h2>
+                <ol>
+                    <li>Cadastro / Login / Segurança</li>
+                    <li>Postar micro‑problema / Feed</li>
+                    <li>Bot com resposta automática</li>
+                    <li>Pontuação básica e badges</li>
+                    <li>Perfil / Ranking</li>
+                    <li>Notificações via Telegram/Discord</li>
+                    <li>Simulação de comunidade (bots) para fase inicial</li>
+                    <li>Analytics / métricas</li>
+                    <li>Premium (pagamento) e IA simples</li>
+                    <li>Escala e segurança</li>
+                </ol>
+            </div>
+
+            <!-- Schema Tab -->
+            <div id="schema" class="tab-content">
+                <h2>🗄️ Esquema de Banco de Dados</h2>
+                <ul>
+                    <li><strong>users:</strong> id, name, email, created_at, is_premium (bool), premium_until (datetime), referral_code</li>
+                    <li><strong>posts:</strong> id, user_id, content, created_at, status, sentiment (opcional)</li>
+                    <li><strong>interactions:</strong> id, post_id, actor_id (user or bot), type (reply/intervention/like), content, created_at</li>
+                    <li><strong>points_events:</strong> id, user_id, points, reason, created_at</li>
+                    <li><strong>badges:</strong> id, key, name, description, criteria_json</li>
+                    <li><strong>user_badges:</strong> id, user_id, badge_id, awarded_at</li>
+                    <li><strong>payments:</strong> id, user_id, provider, provider_id, amount, status, created_at</li>
+                </ul>
+            </div>
+
+            <!-- Metrics Tab -->
+            <div id="metrics" class="tab-content">
+                <h2>📊 Métricas (Instrumentar desde Sprint 6)</h2>
+                <ul>
+                    <li>DAU / MAU</li>
+                    <li>Retenção D1 / D7 / D30</li>
+                    <li>Posts / usuário / dia</li>
+                    <li>Tempo médio até primeira resposta</li>
+                    <li>Conversão convite → registro</li>
+                    <li>Taxa de upgrade para premium</li>
+                    <li>Churn premium</li>
+                    <li>Custo por user acquisition (quando rodar campanhas)</li>
+                </ul>
+            </div>
+
+            <!-- Costs Tab -->
+            <div id="costs" class="tab-content">
+                <h2>💰 Estimativa de Custo Mensal (Inicial)</h2>
+                <ul>
+                    <li><strong>Supabase (free):</strong> R$0</li>
+                    <li><strong>Render / Railway / Vercel (free):</strong> R$0 (limites)</li>
+                    <li><strong>Stripe:</strong> Taxas por transação (~R$0 por test)</li>
+                    <li><strong>OpenAI (se usado):</strong> Variável (reserve um orçamento)</li>
+                    <li><strong>Domínio:</strong> R$30–100/ano</li>
+                    <li><strong>Reserva para infra (quando crescer):</strong> R$200–800/mês</li>
+                </ul>
+                
+                <h3>Política de Monetização</h3>
+                <p><strong>Modelo freemium:</strong> Features básicas gratuitas; premium com IA avançada, relatórios e micro-intervenções mais personalizadas.</p>
+                <p><strong>Preço de referência:</strong> R$30/mês (exemplo no planejamento original)</p>
+                <p><strong>Objetivo:</strong> Cobrar o premium para cobrir custo de chamadas à API de IA.</p>
+            </div>
+
+            <!-- Checklist Tab -->
+            <div id="checklist" class="tab-content hidden">
+                <h2>✅ Checklist Mínimo Pré-Lançamento</h2>
+                <ul class="checklist">
+                    <li>Testes end‑to‑end e correções</li>
+                    <li>Política de privacidade e termos</li>
+                    <li>Backups automáticos configurados</li>
+                    <li>Monitoramento/alertas básicos</li>
+                    <li>Planos de rollback/deploy</li>
+                    <li>Scripts de seed para simular comunidade</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>Sprints Totais</h3>
+                <div class="value" id="totalSprints">12</div>
+            </div>
+            <div class="stat-card">
+                <h3>Concluídos</h3>
+                <div class="value" id="completedCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Em Andamento</h3>
+                <div class="value" id="inProgressCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Tempo Total</h3>
+                <div class="value" id="totalTimeHours">0h</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-primary" onclick="saveAllData()">💾 Salvar Dados</button>
+            <button class="btn-secondary" onclick="showExportModal()">📥 Importar/Exportar</button>
+            <button class="btn-danger" onclick="resetAllData()">🔄 Resetar Tudo</button>
+        </div>
+
+        <h2 style="color: #667eea; margin: 40px 0 20px 0; font-size: 1.8em; text-align: center;">🎯 Gerenciador de Sprints</h2>
+
+        <div class="sprints-grid" id="sprintsContainer"></div>
+
+        <div class="total-hours">
+            <h3>Total de Horas Rastreadas</h3>
+            <div class="value" id="grandTotalHours">0h 0m</div>
+        </div>
+    </div>
+
+    <!-- Modal for Task Details -->
+    <div id="taskDetailsModal" class="task-details-modal" onclick="if(event.target === this) closeTaskDetails()">
+        <div class="task-details-content">
+            <button class="task-details-close" onclick="closeTaskDetails()">✕</button>
+            <div id="taskDetailsBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Import/Export -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <h2>Importar / Exportar Dados</h2>
+            <label>Copie o conteúdo abaixo para salvar em um arquivo .txt, ou cole dados anteriores para restaurar:</label>
+            <textarea id="exportTextarea"></textarea>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="copyExportText()">📋 Copiar para Clipboard</button>
+                <button class="btn-primary" onclick="importFromTextarea()">📥 Importar Dados</button>
+                <button class="btn-secondary" onclick="downloadAsFile()">⬇️ Baixar como .txt</button>
+                <button class="close-modal" onclick="closeExportModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data structure
+        const sprintData = {
+            sprints: []
+        };
+
+        // Sprint definitions from the document
+        const sprintDefinitions = [
+            { number: 1, icon: "🔍", title: "Descoberta, protótipo Notion/Discord e setup inicial", dates: "2025-12-08 — 2025-12-21", hours: 56, objective: "Validar fluxo sem usuários reais; infra e repositório prontos." },
+            { number: 2, icon: "⚙️", title: "Backend inicial: auth, posts, pontuação, DB", dates: "2025-12-22 — 2026-01-04", hours: 56, objective: "API básica para autenticação e CRUD de posts; pontuação calculada no backend." },
+            { number: 3, icon: "🤖", title: "Bots (Telegram/Discord) e respostas automáticas", dates: "2026-01-05 — 2026-01-18", hours: 56, objective: "Bot que simula comunidade, responde automaticamente e integra com API." },
+            { number: 4, icon: "🎨", title: "Frontend dinâmico: feed, perfil, ranking, badges", dates: "2026-01-19 — 2026-02-01", hours: 56, objective: "UI mínima funcional integrada ao backend." },
+            { number: 5, icon: "🎮", title: "Gamificação avançada: streaks, reações, comentários", dates: "2026-02-02 — 2026-02-15", hours: 56, objective: "Reforçar engajamento com mecânicas de jogo rastreáveis digitalmente." },
+            { number: 6, icon: "🧪", title: "QA, piloto fechado (20–100 users), instrumentação", dates: "2026-02-16 — 2026-02-29", hours: 56, objective: "Lançar piloto fechado e coletar métricas iniciais." },
+            { number: 7, icon: "💳", title: "Premium: definição, pagamentos (Stripe) e controle de acesso", dates: "2026-03-01 — 2026-03-14", hours: 56, objective: "Implementar mecanismo de assinatura e features premium protótipo." },
+            { number: 8, icon: "🧠", title: "IA básica para feedback (premium) e relatórios de humor", dates: "2026-03-15 — 2026-03-28", hours: 56, objective: "IA simples (template + API) para relatórios e micro‑intervenções premium." },
+            { number: 9, icon: "🔒", title: "Segurança, privacidade (LGPD), backups e legal", dates: "2026-03-29 — 2026-04-11", hours: 56, objective: "Endurecer produto para público maior e preparar documentos legais." },
+            { number: 10, icon: "📈", title: "Growth / onboarding / landing e parcerias", dates: "2026-04-12 — 2026-04-25", hours: 56, objective: "Preparar crescimento orgânico e conversão." },
+            { number: 11, icon: "⚡", title: "Escala técnica e otimizações (performance)", dates: "2026-04-26 — 2026-05-09", hours: 56, objective: "Preparar infra para >1k usuários e reduzir custos/latência." },
+            { number: 12, icon: "🚀", title: "Lançamento público e retrospectiva final", dates: "2026-05-10 — 2026-05-25", hours: 56, objective: "Lançamento público (piloto 2.0), coleta de métricas e planejamento pós‑lançamento." }
+        ];
+
+        // Sprint tasks with details
+        const sprintTasks = {
+            1: [
+                { title: "Planejamento detalhado / user stories", hours: 5.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Protótipo no Notion (flows, páginas, templates)", hours: 5.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Configurar servidor Discord (canais, mensagem auto, roles)", hours: 5.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Criar repositório Git + README + templates", hours: 2.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Criar contas: Supabase, Render/Railway/Vercel, Stripe (test)", hours: 3.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Documentar arquitetura (diagramas simples)", hours: 3.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Esquema DB inicial (tabelas e relações)", hours: 5.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "CI básico + linting + pre-commit", hours: 4.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Landing estática + formulário HTML simples", hours: 5.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Revisão, ajustes e buffer", hours: 5.0, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            2: [
+                { title: "Modelagem final do DB + migrations", hours: 4.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Auth simples (magic link/JWT)", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Endpoints: criar post, listar posts, perfil, pontos", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Lógica de pontuação (regras iniciais) + testes unitários", hours: 7.0, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "OpenAPI/Swagger docs", hours: 3.0, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Integração com Supabase/Postgres", hours: 5.0, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Badges storage e associações", hours: 5.0, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Scripts seed (bots) e testes", hours: 5.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer e ajustes", hours: 5.0, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            3: [
+                { title: "Definir arquitetura do bot (webhooks/polling)", hours: 3.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Implementar bot Telegram (integração com API)", hours: 12, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Implementar bot Discord (ou escolher 1 se preferir)", hours: 9, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Motor simples de respostas (templates + regras)", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Simulação de comunidade (scripts para gerar respostas)", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Logs, métricas básicas, retry", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes + buffer", hours: 7.5, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            4: [
+                { title: "Escolha tech frontend (VanillaJS / Svelte / React minimal)", hours: 3.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Feed: listar posts + ver respostas", hours: 12, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Perfil: pontos, badges, histórico", hours: 9, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Ranking (daily/weekly)", hours: 7, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Exibição de badges (SVG + descrições)", hours: 5.5, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Invite/referral simples (código)", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Responsividade + testes mobile", hours: 7, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer/ajustes", hours: 6, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            5: [
+                { title: "Implementar streaks (dias seguidos - login diário)", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Sistema de reações em posts (likes/apoio)", hours: 12, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Notificações diárias via bot", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Sistema de comentários em posts", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes e QA de gamificação", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer", hours: 8, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            6: [
+                { title: "Script de recrutamento/test plan", hours: 4, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Instrumentação analytics (events)", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes E2E e correções críticas", hours: 18, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Sessões de user-testing / entrevistas curtas", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Otimização DB e queries", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Relatório de métricas e hipóteses", hours: 10, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            7: [
+                { title: "Definir features premium (lista objetiva)", hours: 4, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Integrar Stripe (test)", hours: 12, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Backend: rotas/flags de premium", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Proteção de endpoints e checks", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Flows de upgrade/downgrade e webhooks", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes de billing e documentação", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer e ajustes", hours: 10, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            8: [
+                { title: "Definir prompts/templates + fallback heurístico", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Integrar serviço de IA (OpenAI/alternativa) com caching", hours: 14, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Gerar relatório de humor semanal (HTML/PDF)", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes de qualidade do output e safety filters", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Pricing & custo por chamada (simulação)", hours: 4, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer e refinamentos", hours: 16, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            9: [
+                { title: "Política de privacidade + termos (rascunho LGPD)", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Implementar consent flows (checkboxes, logs)", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Automated backups + export scripts do DB", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Rate limiting e proteção básica contra abuse", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Revisão de storage de dados sensíveis", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes de penetração básicos / validação inputs", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer/documentação", hours: 12, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            10: [
+                { title: "Landing otimizada + copy + SEO básico", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Onboarding no app + emails de retenção", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Plano de growth (Discord/Telegram/afiliados/coaches)", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Material para parcerias (one-pager para terapeutas)", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Scripts de referral e campaign mechanics (bonificação)", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes A/B iniciais e tracking", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer", hours: 8, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            11: [
+                { title: "Revisão queries e índices", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Cache de ranking / CDN para assets estáticos", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Monitoramento e alertas (Sentry / Prometheus)", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Autoscaling / planos de infra e estimativas de custo", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Revisão de dependências e upgrades", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Testes de carga leve", hours: 8, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer/finalizações", hours: 8, status: "todo", timeSpent: 0, timerActive: false }
+            ],
+            12: [
+                { title: "Checklist final e deploy público", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Comunicado/embudos de aquisição (email/discord)", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Monitoramento pós‑launch e correção rápida de bugs", hours: 12, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Recolher métricas inicial (D1) e documentar", hours: 10, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Roadmap 3‑6 meses futuro (prioridades)", hours: 6, status: "todo", timeSpent: 0, timerActive: false },
+                { title: "Buffer / contingência", hours: 12, status: "todo", timeSpent: 0, timerActive: false }
+            ]
+        };
+
+        // Initialize
+        function init() {
+            loadData();
+            if (sprintData.sprints.length === 0) {
+                sprintDefinitions.forEach(def => {
+                    sprintData.sprints.push({
+                        ...def,
+                        status: 'not-started',
+                        timeSpent: 0, // in seconds
+                        timerActive: false,
+                        notes: ''
+                    });
+                });
+            }
+            renderSprints();
+            updateStats();
+        }
+
+        function renderSprints() {
+            const container = document.getElementById('sprintsContainer');
+            container.innerHTML = '';
+
+            sprintData.sprints.forEach((sprint, index) => {
+                const card = createSprintCard(sprint, index);
+                container.appendChild(card);
+            });
+        }
+
+        function createSprintCard(sprint, index) {
+            const card = document.createElement('div');
+            card.className = `sprint-card ${sprint.status}`;
+            
+            const timeHours = Math.floor(sprint.timeSpent / 3600);
+            const timeMinutes = Math.floor((sprint.timeSpent % 3600) / 60);
+            const timeSeconds = sprint.timeSpent % 60;
+
+            card.innerHTML = `
+                <div class="sprint-header">
+                    <div>
+                        <span class="sprint-number">Sprint ${sprint.number}</span><br>
+                        ${sprint.title}
+                    </div>
+                    <span class="sprint-badge badge-${sprint.status}">
+                        ${getStatusLabel(sprint.status)}
+                    </span>
+                </div>
+                <div class="sprint-content">
+                    <div class="sprint-info">
+                        <label>📅 Período</label>
+                        <p>${sprint.dates}</p>
+                    </div>
+
+                    <div class="sprint-info">
+                        <label>⏱️ Tempo Rastreado</label>
+                        <div class="timer-display">
+                            <div class="label">Tempo Total</div>
+                            <div class="time" id="time-${index}">
+                                ${timeHours}h ${timeMinutes}m ${timeSeconds}s
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-buttons">
+                        <button class="status-btn ${sprint.status === 'not-started' ? 'active' : ''}" 
+                            onclick="updateStatus(${index}, 'not-started')">🔵 A Iniciar</button>
+                        <button class="status-btn ${sprint.status === 'in-progress' ? 'active' : ''}" 
+                            onclick="updateStatus(${index}, 'in-progress')">🟡 Em Andamento</button>
+                        <button class="status-btn ${sprint.status === 'completed' ? 'active' : ''}" 
+                            onclick="updateStatus(${index}, 'completed')">✅ Concluído</button>
+                    </div>
+
+                    <div class="sprint-actions">
+                        <button class="btn-small btn-timer-start" onclick="startTimer(${index})" 
+                            ${sprint.timerActive ? 'disabled' : ''}>
+                            ▶️ Iniciar
+                        </button>
+                        <button class="btn-small btn-timer-stop" onclick="stopTimer(${index})" 
+                            ${!sprint.timerActive ? 'disabled' : ''}>
+                            ⏹️ Parar
+                        </button>
+                        <button class="btn-small btn-timer-reset" onclick="resetTimer(${index})">
+                            🔄 Resetar
+                        </button>
+                        <button class="btn-small btn-primary" onclick="addTime(${index})">
+                            ⏱️ +15min
+                        </button>
+                    </div>
+
+                    <div class="sprint-info" style="margin-top: 15px;">
+                        <label>📝 Notas</label>
+                        <input type="text" id="notes-${index}" value="${sprint.notes}" 
+                            placeholder="Adicione notas sobre a sprint..."
+                            onchange="updateNotes(${index}, this.value)"
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'not-started': 'A INICIAR',
+                'in-progress': 'EM ANDAMENTO',
+                'completed': 'CONCLUÍDO'
+            };
+            return labels[status] || status;
+        }
+
+        function updateStatus(index, status) {
+            sprintData.sprints[index].status = status;
+            if (status !== 'in-progress' && sprintData.sprints[index].timerActive) {
+                stopTimer(index);
+            }
+            renderSprints();
+            updateStats();
+            saveAllData();
+        }
+
+        function startTimer(index) {
+            sprintData.sprints[index].timerActive = true;
+            renderSprints();
+
+            const interval = setInterval(() => {
+                if (!sprintData.sprints[index].timerActive) {
+                    clearInterval(interval);
+                    return;
+                }
+                sprintData.sprints[index].timeSpent++;
+                updateTimeDisplay(index);
+                updateStats();
+            }, 1000);
+        }
+
+        function stopTimer(index) {
+            sprintData.sprints[index].timerActive = false;
+            renderSprints();
+            updateStats();
+            saveAllData();
+        }
+
+        function resetTimer(index) {
+            if (confirm('Tem certeza que deseja resetar o cronômetro desta sprint?')) {
+                sprintData.sprints[index].timeSpent = 0;
+                sprintData.sprints[index].timerActive = false;
+                renderSprints();
+                updateStats();
+                saveAllData();
+            }
+        }
+
+        function addTime(index) {
+            sprintData.sprints[index].timeSpent += 900; // 15 minutes
+            renderSprints();
+            updateStats();
+            saveAllData();
+        }
+
+        function updateTimeDisplay(index) {
+            const timeElement = document.getElementById(`time-${index}`);
+            if (timeElement) {
+                const sprint = sprintData.sprints[index];
+                const hours = Math.floor(sprint.timeSpent / 3600);
+                const minutes = Math.floor((sprint.timeSpent % 3600) / 60);
+                const seconds = sprint.timeSpent % 60;
+                timeElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
+            }
+        }
+
+        function updateNotes(index, text) {
+            sprintData.sprints[index].notes = text;
+            saveAllData();
+        }
+
+        function updateStats() {
+            const total = sprintData.sprints.length;
+            const completed = sprintData.sprints.filter(s => s.status === 'completed').length;
+            const inProgress = sprintData.sprints.filter(s => s.status === 'in-progress').length;
+            
+            let totalSeconds = 0;
+            sprintData.sprints.forEach(sprint => {
+                totalSeconds += sprint.timeSpent;
+            });
+
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            document.getElementById('totalSprints').textContent = total;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('inProgressCount').textContent = inProgress;
+            document.getElementById('totalTimeHours').textContent = `${hours}h`;
+            document.getElementById('grandTotalHours').textContent = `${hours}h ${minutes}m`;
+        }
+
+        function saveAllData() {
+            const dataStr = JSON.stringify(sprintData, null, 2);
+            localStorage.setItem('sprintTrackerData', dataStr);
+        }
+
+        function loadData() {
+            const stored = localStorage.getItem('sprintTrackerData');
+            if (stored) {
+                sprintData.sprints = JSON.parse(stored).sprints;
+            }
+        }
+
+        function showExportModal() {
+            const modal = document.getElementById('exportModal');
+            const textarea = document.getElementById('exportTextarea');
+            const dataStr = JSON.stringify(sprintData, null, 2);
+            textarea.value = dataStr;
+            modal.style.display = 'block';
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function copyExportText() {
+            const textarea = document.getElementById('exportTextarea');
+            textarea.select();
+            document.execCommand('copy');
+            alert('✅ Dados copiados para o clipboard!');
+        }
+
+        function importFromTextarea() {
+            const textarea = document.getElementById('exportTextarea');
+            try {
+                const imported = JSON.parse(textarea.value);
+                if (imported.sprints && Array.isArray(imported.sprints)) {
+                    sprintData.sprints = imported.sprints;
+                    saveAllData();
+                    closeExportModal();
+                    renderSprints();
+                    updateStats();
+                    alert('✅ Dados importados com sucesso!');
+                } else {
+                    alert('❌ Formato inválido!');
+                }
+            } catch (e) {
+                alert('❌ Erro ao importar: ' + e.message);
+            }
+        }
+
+        function downloadAsFile() {
+            const dataStr = document.getElementById('exportTextarea').value;
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(dataStr));
+            element.setAttribute('download', `sprint-tracker-${new Date().toISOString().split('T')[0]}.txt`);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function resetAllData() {
+            if (confirm('⚠️ Tem certeza? Isso apagará TODOS os dados de progresso!')) {
+                sprintData.sprints = [];
+                localStorage.removeItem('sprintTrackerData');
+                init();
+                alert('✅ Todos os dados foram resetados!');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('exportModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+
+        // Auto-save every 10 seconds if timer is active
+        setInterval(() => {
+            if (sprintData.sprints.some(s => s.timerActive)) {
+                saveAllData();
+            }
+        }, 10000);
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Generate timeline if needed
+            if (tabName === 'timeline') {
+                generateTimeline();
+            }
+
+            // Generate kanban if needed
+            if (tabName === 'kanban') {
+                generateKanbanBoard();
+            }
+        }
+
+        function generateTimeline() {
+            const container = document.getElementById('timelineContainer');
+            if (container.children.length > 0) return; // Already generated
+
+            sprintDefinitions.forEach(sprint => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <strong>Sprint ${sprint.number}</strong>
+                    <p>${sprint.dates}</p>
+                    <p style="font-size: 0.85em; color: #999; margin-top: 8px;">
+                        📍 ${sprint.title}
+                    </p>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function generateKanbanBoard() {
+            const selector = document.getElementById('sprintSelector');
+            const board = document.getElementById('kanbanBoard');
+
+            // Clear existing
+            if (selector.children.length === 0) {
+                sprintDefinitions.forEach(sprint => {
+                    const btn = document.createElement('button');
+                    btn.textContent = `Sprint ${sprint.number}`;
+                    btn.className = sprint.number === 1 ? 'active' : '';
+                    btn.onclick = () => showKanbanSprint(sprint.number);
+                    selector.appendChild(btn);
+                });
+            }
+
+            showKanbanSprint(1);
+        }
+
+        function showKanbanSprint(sprintNum) {
+            // Update button active state
+            document.querySelectorAll('.sprint-selector button').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === sprintNum - 1);
+            });
+
+            const board = document.getElementById('kanbanBoard');
+            const tasks = sprintTasks[sprintNum];
+            const sprint = sprintDefinitions[sprintNum - 1];
+
+            const sprintDetails = {
+                1: {
+                    main: "Validar fluxo sem usuários reais; infra e repositório prontos.",
+                    checklist: [
+                        "Criar estrutura do projeto (Git, CI/CD)",
+                        "Protótipo funcional no Notion",
+                        "Servidor Discord configurado",
+                        "Banco de dados esquematizado",
+                        "Landing page estática pronta"
+                    ],
+                    deliverables: [
+                        "Protótipo Notion + servidor Discord",
+                        "Repositório com CI e esquema DB",
+                        "Landing estática"
+                    ]
+                },
+                2: {
+                    main: "API básica para autenticação e CRUD de posts; pontuação calculada.",
+                    checklist: [
+                        "Autenticação (magic link/JWT) implementada",
+                        "Endpoints CRUD funcionando",
+                        "Lógica de pontuação testada",
+                        "Documentação Swagger pronta",
+                        "Seeds e testes passando"
+                    ],
+                    deliverables: [
+                        "Backend com endpoints documentados",
+                        "DB populado com seeds",
+                        "Testes automatizados passando"
+                    ]
+                },
+                3: {
+                    main: "Bot que simula comunidade, responde automaticamente e integra com API.",
+                    checklist: [
+                        "Arquitetura do bot definida",
+                        "Integração com Telegram/Discord",
+                        "Motor de respostas implementado",
+                        "Simulação de comunidade funcionando",
+                        "Logs e métricas básicas"
+                    ],
+                    deliverables: [
+                        "Bot operacional respondendo posts",
+                        "Interações registradas no backend",
+                        "Resposta < 60s garantida"
+                    ]
+                },
+                4: {
+                    main: "UI mínima funcional integrada ao backend.",
+                    checklist: [
+                        "Tech frontend escolhida",
+                        "Feed exibindo posts corretamente",
+                        "Perfil mostrando pontos/badges",
+                        "Ranking atualizando",
+                        "Responsividade testada mobile"
+                    ],
+                    deliverables: [
+                        "SPA simples com feed, perfil, ranking",
+                        "Fluxo completo funcionando",
+                        "Mobile responsivo"
+                    ]
+                },
+                5: {
+                    main: "Reforçar engajamento com mecânicas de jogo rastreáveis digitalmente.",
+                    checklist: [
+                        "Streaks contando login diário automaticamente",
+                        "Sistema de reações em posts (❤️💪🤗⭐)",
+                        "Sistema de comentários com moderação",
+                        "Notificações automáticas via bot",
+                        "Testes de gamificação passando"
+                    ],
+                    deliverables: [
+                        "Streaks automáticos por login",
+                        "Reações e comentários ativos",
+                        "Pontuação automática funcionando"
+                    ]
+                },
+                6: {
+                    main: "Lançar piloto fechado e coletar métricas iniciais.",
+                    checklist: [
+                        "Test plan pronto",
+                        "Analytics instrumentado",
+                        "Testes E2E passando",
+                        "20+ usuários reais testando",
+                        "Bugs críticos corrigidos"
+                    ],
+                    deliverables: [
+                        "Piloto com coleta de dados",
+                        "Relatório inicial com métricas",
+                        "Dados de D1/D7 coletados"
+                    ]
+                },
+                7: {
+                    main: "Implementar mecanismo de assinatura e features premium.",
+                    checklist: [
+                        "Features premium definidas",
+                        "Stripe integrado (teste)",
+                        "Flags de premium no backend",
+                        "Proteção de endpoints",
+                        "Webhooks de pagamento"
+                    ],
+                    deliverables: [
+                        "Assinaturas em teste",
+                        "Gating de features funcionando",
+                        "Fluxo upgrade/downgrade"
+                    ]
+                },
+                8: {
+                    main: "IA simples para relatórios e micro‑intervenções premium.",
+                    checklist: [
+                        "Prompts/templates definidos",
+                        "API de IA integrada",
+                        "Caching implementado",
+                        "Relatório de humor gerado",
+                        "Safety filters ativos"
+                    ],
+                    deliverables: [
+                        "Feedback automatizado premium",
+                        "Relatório semanal HTML/PDF",
+                        "80% coerência testada"
+                    ]
+                },
+                9: {
+                    main: "Endurecer produto para público maior e preparar legal.",
+                    checklist: [
+                        "Política de privacidade LGPD pronta",
+                        "Consent flows implementados",
+                        "Backups automatizados",
+                        "Rate limiting ativo",
+                        "Testes de penetração básicos"
+                    ],
+                    deliverables: [
+                        "Policies publicadas",
+                        "Backups automatizados",
+                        "Controles de segurança"
+                    ]
+                },
+                10: {
+                    main: "Preparar crescimento orgânico e conversão.",
+                    checklist: [
+                        "Landing otimizada com copy",
+                        "SEO básico implementado",
+                        "Onboarding no app pronto",
+                        "Emails de retenção",
+                        "Scripts de referral"
+                    ],
+                    deliverables: [
+                        "Landing com conversão medida",
+                        "Plano de growth 1k usuários",
+                        "Fluxo de referral testado"
+                    ]
+                },
+                11: {
+                    main: "Preparar infra para >1k usuários e reduzir custos.",
+                    checklist: [
+                        "Queries otimizadas",
+                        "Cache e CDN configurado",
+                        "Monitoramento ativo",
+                        "Autoscaling definido",
+                        "Testes de carga passando"
+                    ],
+                    deliverables: [
+                        "Infra resiliente",
+                        "Monitoramento configurado",
+                        "Sobrevive a teste de carga"
+                    ]
+                },
+                12: {
+                    main: "Lançamento público e coleta inicial de métricas.",
+                    checklist: [
+                        "Checklist final passou",
+                        "Deploy público sem downtime",
+                        "Comunicado lançamento enviado",
+                        "Monitoramento pós-launch ativo",
+                        "D1 coletado e documentado"
+                    ],
+                    deliverables: [
+                        "Lançamento público",
+                        "Relatório inicial de performance",
+                        "Roadmap 3-6 meses pronto"
+                    ]
+                }
+            };
+
+            const details = sprintDetails[sprintNum] || {};
+
+            board.innerHTML = `
+                <div class="sprint-details-box">
+                    <h3>
+                        <span class="sprint-icon">${sprint.icon}</span>
+                        Sprint ${sprint.number}: ${sprint.title}
+                    </h3>
+                    <p style="margin: 10px 0 0 0; font-size: 0.95em;">📅 ${sprint.dates}</p>
+                    
+                    <div class="sprint-objective">
+                        <div class="sprint-objective-label">🎯 Objetivo</div>
+                        <div class="sprint-objective-text">${details.main || sprint.objective}</div>
+                    </div>
+
+                    <div class="sprint-checklist">
+                        <h4>✅ O que fazer nesta Sprint:</h4>
+                        <ul>
+                            ${(details.checklist || []).map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="sprint-deliverables">
+                        <h4>📦 Entregáveis esperados:</h4>
+                        <ul>
+                            ${(details.deliverables || []).map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 20px;">📋 Tarefas Detalhadas</h3>
+                <div class="kanban-container" id="kanbanColumns"></div>
+            `;
+
+            const columnsContainer = document.getElementById('kanbanColumns');
+            const statuses = ['todo', 'in-progress', 'done'];
+            const statusLabels = ['A Fazer', 'Em Andamento', 'Concluído'];
+            const statusEmojis = ['🔵', '🟡', '✅'];
+
+            statuses.forEach((status, idx) => {
+                const statusTasks = tasks.filter(t => t.status === status);
+                const column = document.createElement('div');
+                column.className = 'kanban-column';
+                
+                column.innerHTML = `
+                    <h3>
+                        ${statusEmojis[idx]} ${statusLabels[idx]}
+                        <span class="kanban-column-count">${statusTasks.length}</span>
+                    </h3>
+                    <div id="column-${status}"></div>
+                `;
+
+                columnsContainer.appendChild(column);
+
+                const columnContent = document.getElementById(`column-${status}`);
+                statusTasks.forEach(task => {
+                    const card = document.createElement('div');
+                    card.className = `kanban-card ${task.status}`;
+                    const timerKey = `timer-${sprintNum}-${task.title.replace(/\s/g, '')}`;
+                    const h = Math.floor(task.timeSpent / 3600);
+                    const m = Math.floor((task.timeSpent % 3600) / 60);
+                    const s = task.timeSpent % 60;
+                    
+                    card.innerHTML = `
+                        <div class="kanban-card-header">
+                            <div class="kanban-card-title">
+                                ${task.title}
+                                <span class="task-info-icon" onclick="showTaskDetails('${task.title.replace(/'/g, "\\'")}')">ℹ️</span>
+                            </div>
+                            <span class="kanban-card-hours">${task.hours}h</span>
+                        </div>
+                        <div class="task-timer">
+                            <div class="task-timer-label" style="font-size: 0.8em; opacity: 0.9;">Tempo rastreado:</div>
+                            <div class="task-timer-display" id="${timerKey}">${h}h ${m}m ${s}s</div>
+                            <div class="task-timer-buttons">
+                                <button class="task-timer-btn ${task.timerActive ? 'active' : ''}" onclick="startTaskTimer(${sprintNum}, '${task.title.replace(/'/g, "\\'")}')">▶️</button>
+                                <button class="task-timer-btn ${task.timerActive ? 'active' : ''}" onclick="stopTaskTimer(${sprintNum}, '${task.title.replace(/'/g, "\\'")}')">⏹️</button>
+                                <button class="task-timer-btn" onclick="addTaskTime(${sprintNum}, '${task.title.replace(/'/g, "\\'")}', 15)">+15</button>
+                                <button class="task-timer-btn" onclick="resetTaskTimer(${sprintNum}, '${task.title.replace(/'/g, "\\'")}')">🔄</button>
+                            </div>
+                        </div>
+                        <div class="kanban-card-status">
+                            <button class="kanban-status-btn ${task.status === 'todo' ? 'active' : ''}" onclick="changeTaskStatus(${sprintNum}, '${task.title.replace(/'/g, "\\'")}', 'todo')">A Fazer</button>
+                            <button class="kanban-status-btn ${task.status === 'in-progress' ? 'active' : ''}" onclick="changeTaskStatus(${sprintNum}, '${task.title.replace(/'/g, "\\'")}', 'in-progress')">Fazendo</button>
+                            <button class="kanban-status-btn ${task.status === 'done' ? 'active' : ''}" onclick="changeTaskStatus(${sprintNum}, '${task.title.replace(/'/g, "\\'")}', 'done')">Pronto</button>
+                        </div>
+                    `;
+                    columnContent.appendChild(card);
+                });
+            });
+        }
+
+        function changeTaskStatus(sprintNum, taskTitle, newStatus) {
+            const task = sprintTasks[sprintNum].find(t => t.title === taskTitle);
+            if (task) {
+                task.status = newStatus;
+                showKanbanSprint(sprintNum);
+                saveAllData();
+            }
+        }
+
+        function startTaskTimer(sprintNum, taskTitle) {
+            const task = sprintTasks[sprintNum].find(t => t.title === taskTitle);
+            if (task) {
+                task.timerActive = true;
+                showKanbanSprint(sprintNum);
+
+                const interval = setInterval(() => {
+                    if (!task.timerActive) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    task.timeSpent++;
+                    updateTaskTimerDisplay(sprintNum, taskTitle);
+                    saveAllData();
+                }, 1000);
+            }
+        }
+
+        function stopTaskTimer(sprintNum, taskTitle) {
+            const task = sprintTasks[sprintNum].find(t => t.title === taskTitle);
+            if (task) {
+                task.timerActive = false;
+                showKanbanSprint(sprintNum);
+                saveAllData();
+            }
+        }
+
+        function resetTaskTimer(sprintNum, taskTitle) {
+            const task = sprintTasks[sprintNum].find(t => t.title === taskTitle);
+            if (task && confirm(`Resetar cronômetro de "${taskTitle}"?`)) {
+                task.timeSpent = 0;
+                task.timerActive = false;
+                showKanbanSprint(sprintNum);
+                saveAllData();
+            }
+        }
+
+        function addTaskTime(sprintNum, taskTitle, minutes) {
+            const task = sprintTasks[sprintNum].find(t => t.title === taskTitle);
+            if (task) {
+                task.timeSpent += minutes * 60;
+                showKanbanSprint(sprintNum);
+                saveAllData();
+            }
+        }
+
+        function updateTaskTimerDisplay(sprintNum, taskTitle) {
+            const task = sprintTasks[sprintNum].find(t => t.title === taskTitle);
+            if (task) {
+                const h = Math.floor(task.timeSpent / 3600);
+                const m = Math.floor((task.timeSpent % 3600) / 60);
+                const s = task.timeSpent % 60;
+                const display = document.getElementById(`timer-${sprintNum}-${taskTitle.replace(/\s/g, '')}`);
+                if (display) {
+                    display.textContent = `${h}h ${m}m ${s}s`;
+                }
+            }
+        }
+
+        function getSprintTotalTime(sprintNum) {
+            const tasks = sprintTasks[sprintNum];
+            let total = 0;
+            tasks.forEach(task => {
+                total += task.timeSpent;
+            });
+            return total;
+        }
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            return `${h}h ${m}m ${s}s`;
+        }
+
+        // Task detailed descriptions
+        const taskDescriptions = {
+            "Planejamento detalhado / user stories": {
+                description: "Você vai documentar exatamente o que cada tipo de pessoa fará no seu app. Por exemplo: 'Um usuário deprimido quer postar um pensamento ruim e receber uma dica para se sentir melhor'.",
+                tips: [
+                    "1. Faça uma lista de diferentes usuários: deprimido, ansioso, normal",
+                    "2. Para cada usuário, escreva: O que eles querem fazer? Por quê?",
+                    "3. Exemplo completo: 'Como usuário deprimido, quero postar meus pensamentos ruins, para que outras pessoas me ajudem'",
+                    "4. Escreva em um documento (Google Docs ou Notion) e compartilhe"
+                ]
+            },
+            "Protótipo no Notion (flows, páginas, templates)": {
+                description: "Você vai criar uma versão de brinquedo do seu app no Notion (sem código). É como desenhar o app no papel, mas digital.",
+                tips: [
+                    "1. Abra uma página no Notion",
+                    "2. Crie páginas: 'Cadastro', 'Feed de Posts', 'Meu Perfil', 'Ranking'",
+                    "3. Na página 'Cadastro': adicione campos tipo 'Nome', 'Email', 'Senha'",
+                    "4. Na página 'Feed': liste alguns posts de exemplo",
+                    "5. Na página 'Meu Perfil': mostre 'Pontos: 100', 'Badges: 🏆', 'Histórico de posts'",
+                    "6. Clique nos botões para testar: consegue ir de uma página para outra?"
+                ]
+            },
+            "Configurar servidor Discord (canais, mensagem auto, roles)": {
+                description: "Você vai criar um servidor privado no Discord (tipo WhatsApp para equipes) para testes e comunicação.",
+                tips: [
+                    "1. Vá a Discord.com, crie um servidor novo",
+                    "2. Crie canais (categorias) como em um fórum:",
+                    "   - #geral: para bate-papo geral",
+                    "   - #testes: para encontrar bugs",
+                    "   - #feedback: usuários dão ideias",
+                    "   - #bugs: relatar problemas",
+                    "3. Convide seus amigos/betas para testar",
+                    "4. Quando alguém entra, Discord manda automático: 'Bem-vindo! Comece testando em #testes'"
+                ]
+            },
+            "Criar repositório Git + README + templates": {
+                description: "Você vai criar um local online para guardar todo seu código (como um Google Drive para programadores).",
+                tips: [
+                    "1. Vá a GitHub.com, crie uma conta grátis",
+                    "2. Clique em 'New Repository', escolha um nome",
+                    "3. Crie um arquivo chamado 'README.md' com instruções:",
+                    "   - Como instalar o projeto no computador",
+                    "   - Como rodar o app localmente",
+                    "   - Exemplo: 'npm install' depois 'npm start'",
+                    "4. Faça templates para quando alguém quer ajudar (Pull Request)"
+                ]
+            },
+            "Criar contas: Supabase, Render/Railway/Vercel, Stripe (test)": {
+                description: "Você vai criar contas em serviços online que vão ser a infraestrutura do seu app.",
+                tips: [
+                    "1. SUPABASE: Banco de dados grátis (como Excel online, mas profissional)",
+                    "   - Vá a supabase.com, crie conta, crie projeto",
+                    "   - Salve a URL e chave em um arquivo seguro",
+                    "2. RENDER/RAILWAY: Para colocar seu app online",
+                    "   - Escolha um (Railway é mais fácil para iniciantes)",
+                    "   - Siga o tutorial deles para conectar seu GitHub",
+                    "3. STRIPE: Para receber dinheiro das assinaturas",
+                    "   - Vá a stripe.com, crie conta",
+                    "   - Use modo TESTE primeiro (com cartões fake)",
+                    "   - Guarde as chaves em um arquivo seguro"
+                ]
+            },
+            "Documentar arquitetura (diagramas simples)": {
+                description: "Você vai desenhar como seu app funciona: quem fala com quem, por onde os dados passam.",
+                tips: [
+                    "1. Use um site gratuito: draw.io ou miro.com",
+                    "2. Desenhe caixas: 'Computador do Usuário' → 'Seu Servidor' → 'Banco de Dados'",
+                    "3. Desenhe setas: o fluxo de um post",
+                    "   - Usuário escreve post no app",
+                    "   - Envia pro servidor",
+                    "   - Servidor guarda no banco",
+                    "   - Servidor manda para bot responder",
+                    "   - Bot manda resposta de volta",
+                    "   - Usuário vê resposta no app",
+                    "4. Salve esse diagrama no seu README"
+                ]
+            },
+            "Esquema DB inicial (tabelas e relações)": {
+                description: "Você vai dizer ao banco de dados quais informações você vai guardar e como. É como criar pastas (tabelas) com documentos (dados).",
+                tips: [
+                    "1. Pense: quais informações você precisa guardar?",
+                    "   - Usuários: nome, email, senha, pontos",
+                    "   - Posts: texto, quem escreveu, quando",
+                    "   - Respostas: texto, qual post respondeu, pontos ganhos",
+                    "2. No Supabase, crie tabelas:",
+                    "   - Tabela 'users': colunas nome, email, senha, pontos_total",
+                    "   - Tabela 'posts': colunas id, texto, usuario_id, data_criacao",
+                    "   - Tabela 'respostas': colunas id, texto, post_id, usuario_id",
+                    "3. Teste: consegue adicionar 1 usuário de teste? 1 post?"
+                ]
+            },
+            "CI básico + linting + pre-commit": {
+                description: "Você vai configurar verificações automáticas: toda vez que enviar código, a máquina verifica se não tem erro.",
+                tips: [
+                    "1. Instale Prettier: formata código bonito automaticamente",
+                    "   - npm install prettier",
+                    "2. Configure GitHub Actions (automação no GitHub):",
+                    "   - Crie pasta .github/workflows",
+                    "   - Arquivo que roda testes toda vez que alguém envia código",
+                    "3. Pre-commit hook: verifica código ANTES de enviar",
+                    "   - Se tem erro, avisa e pede corrigir"
+                ]
+            },
+            "Landing estática + formulário HTML simples": {
+                description: "Você vai criar uma página da web que pessoas veem ANTES de entrar no app. É como um outdoor digital.",
+                tips: [
+                    "1. Crie um arquivo 'index.html' com:",
+                    "2. Título bem grande: 'Micro Therapy Social - Seu App de Saúde Mental'",
+                    "3. Descrição: 'Poste seus problemas, receba dicas de especialistas'",
+                    "4. Imagem/ícone bacana",
+                    "5. Botão grande: 'Começar Agora' ou 'Cadastre-se'",
+                    "6. Formulário simples: email, senha, confirmar",
+                    "7. Cores bonitas, responsivo no celular também"
+                ]
+            },
+            "Modelagem final do DB + migrations": {
+                description: "Você vai finalizar o desenho do banco e criar as tabelas de verdade.",
+                tips: [
+                    "1. Revise o esquema: está completo? Faltam dados?",
+                    "2. Adicione colunas importantes:",
+                    "   - data_criacao: quando o registro foi criado",
+                    "   - data_atualizacao: quando foi editado",
+                    "   - ativo: sim ou não (soft delete)",
+                    "3. Crie migrations (arquivos que criam tabelas):",
+                    "   - migration_001_create_users.sql",
+                    "   - migration_002_create_posts.sql",
+                    "4. Execute as migrations no Supabase"
+                ]
+            },
+            "Auth simples (magic link/JWT)": {
+                description: "Você vai fazer um login fácil: usuário recebe um link no email, clica, pronto! Está logado.",
+                tips: [
+                    "1. MAGIC LINK (recomendado para começar):",
+                    "   - Usuário digita email",
+                    "   - Sistema envia link por email",
+                    "   - Usuário clica no link",
+                    "   - Pronto! Está logado, sem precisar de senha",
+                    "2. Como fazer no código:",
+                    "   - Quando usuário digita email: guardar no banco",
+                    "   - Enviar email com link único (pode usar SendGrid grátis)",
+                    "   - Link aponta: seu-app.com/auth?token=xyz123",
+                    "   - Quando clica: verificar token, criar sessão"
+                ]
+            },
+            "Endpoints: criar post, listar posts, perfil, pontos": {
+                description: "Você vai criar conexões entre o app (que o usuário vê) e o servidor (que faz as coisas). São como botões invisíveis.",
+                tips: [
+                    "1. Criar um novo post:",
+                    "   - Usuário clica 'Novo Post' no app",
+                    "   - App envia texto para servidor em /posts (POST)",
+                    "   - Servidor guarda no banco",
+                    "   - Responde: 'Pronto! Post criado com ID 123'",
+                    "2. Listar posts:",
+                    "   - App pede ao servidor: 'Me manda os últimos 10 posts' (/posts GET)",
+                    "   - Servidor busca no banco, responde com lista",
+                    "3. Ver perfil do usuário:",
+                    "   - App: 'Manda dados do usuário 456' (/users/456 GET)",
+                    "4. Ver pontos:",
+                    "   - App: 'Quais são meus pontos?' (/users/456/pontos GET)"
+                ]
+            },
+            "Lógica de pontuação (regras iniciais) + testes unitários": {
+                description: "Você vai dizer: quanto vale cada ação? Postar = 10 pontos? Responder = 5? Depois testa se funciona.",
+                tips: [
+                    "1. Defina as regras:",
+                    "   - Criar um post: 10 pontos",
+                    "   - Receber uma resposta: 5 pontos",
+                    "   - Dar um like: 1 ponto",
+                    "   - 7 dias sem faltar: 50 pontos (streak)",
+                    "2. Escreva testes (tipo verificar conta de matemática):",
+                    "   - Teste: usuário posta → ganha 10 pontos? SIM",
+                    "   - Teste: usuário recebe resposta → ganha 5 pontos? SIM",
+                    "   - Teste: usuário novo começa com 0 pontos? SIM",
+                    "3. Rode os testes: tudo deve passar (verde)"
+                ]
+            },
+            "Definir arquitetura do bot (webhooks/polling)": {
+                description: "Você vai decidir COMO o bot vai saber quando tem um novo post para responder.",
+                tips: [
+                    "1. Opção 1 - WEBHOOK (mais rápido, recomendado):",
+                    "   - Seu servidor avisa o bot: 'Ó bot! Tem novo post, vem aí!'",
+                    "   - Bot recebe na hora e responde",
+                    "2. Opção 2 - POLLING (mais simples, mais lento):",
+                    "   - Bot fica perguntando: 'Tem novo post? E agora? E agora?'",
+                    "   - A cada 5 segundos verifica",
+                    "3. Recomendação: comece com WEBHOOK, é mais profissional"
+                ]
+            },
+            "Implementar bot Telegram (integração com API)": {
+                description: "Você vai criar um robô no Telegram que responde automaticamente aos posts dos usuários.",
+                tips: [
+                    "1. Vá a @BotFather no Telegram, crie novo bot",
+                    "   - Ele dá um token (tipo uma chave secreta)",
+                    "2. Instale biblioteca: npm install telegraf",
+                    "3. Configure seu bot para:",
+                    "   - Receber mensagens de usuários",
+                    "   - Chamar sua API: 'Ei, este é um novo post!'",
+                    "   - Sua API responde: 'Responda isso: ...'",
+                    "   - Bot envia resposta no Telegram",
+                    "4. Teste no Telegram: manda mensagem pro bot, responde?"
+                ]
+            },
+            "Implementar bot Discord (ou escolher 1 se preferir)": {
+                description: "Você vai criar um robô no Discord (como um membro automático do servidor) que responde posts.",
+                tips: [
+                    "1. No Discord Developer Portal, crie nova app",
+                    "2. Instale biblioteca: npm install discord.js",
+                    "3. Configure para:",
+                    "   - Escutar mensagens em canais",
+                    "   - Chamar sua API quando vê novo post",
+                    "   - Postar resposta no Discord",
+                    "4. Teste: envie mensagem no #testes, bot responde?"
+                ]
+            },
+            "Motor simples de respostas (templates + regras)": {
+                description: "Você vai criar um sistema que escolhe a resposta certa baseado no que o usuário postou.",
+                tips: [
+                    "1. Crie templates (respostas prontas) por categoria:",
+                    "   - Depressão: 'Sinta-se melhor com técnica da respiração...'",
+                    "   - Ansiedade: 'Tente este exercício de relaxamento...'",
+                    "   - Solidão: 'Você não está sozinho! Outras pessoas também...'",
+                    "2. Regras simples:",
+                    "   - Se post contém 'triste', 'deprimido' → resposta depressão",
+                    "   - Se contém 'medo', 'preocupado' → resposta ansiedade",
+                    "   - Se contém 'sozinho' → resposta solidão",
+                    "3. Adicione variação:",
+                    "   - Não enviar SEMPRE a mesma resposta",
+                    "   - Escolha aleatória entre 3-5 respostas similares"
+                ]
+            },
+            "Escolha tech frontend (VanillaJS / Svelte / React minimal)": {
+                description: "Você vai decidir com qual ferramenta vai fazer a interface (o que usuário vê e clica).",
+                tips: [
+                    "1. VanillaJS: HTML + CSS + JavaScript puro",
+                    "   - Vantagem: Simples, nada extra",
+                    "   - Desvantagem: Fica complicado com muitos dados",
+                    "   - Bom para: Primeira sprint",
+                    "2. React: Ferramenta profissional do Facebook",
+                    "   - Vantagem: Muito usado, muitos exemplos online",
+                    "   - Desvantagem: Mais complexo no início",
+                    "3. Svelte: Novo, mais simples que React",
+                    "   - Vantagem: Mais fácil de entender",
+                    "   - Desvantagem: Menos pessoas sabem",
+                    "4. Recomendação: Comece com VanillaJS ou Svelte"
+                ]
+            },
+            "Feed: listar posts + ver respostas": {
+                description: "Você vai criar a página principal do app onde as pessoas veem os posts uns dos outros e as respostas.",
+                tips: [
+                    "1. Página mostra lista de posts, tipo Twitter:",
+                    "   - Nome do usuário, foto (se tiver), texto do post",
+                    "   - Clique para expandir e ver respostas",
+                    "2. Mostrar respostas do bot debaixo do post",
+                    "3. Botão 'Novo Post' no topo",
+                    "   - Clique → abre modal/popup",
+                    "   - Digita texto → clica 'Postar'",
+                    "   - Aparece na lista de posts",
+                    "4. Responsivo:",
+                    "   - No celular: 1 coluna",
+                    "   - No computador: 2-3 colunas"
+                ]
+            },
+            "Perfil: pontos, badges, histórico": {
+                description: "Você vai criar a página pessoal de cada usuário onde mostra progresso, conquistas e histórico.",
+                tips: [
+                    "1. Página do Perfil mostra:",
+                    "   - Nome do usuário, foto",
+                    "   - Pontos totais: '2.450 pontos'",
+                    "   - Badges/troféus conquistados com ícones",
+                    "   - Histórico: lista de todos os posts dele",
+                    "   - Botão 'Editar Perfil' (se for o próprio usuário)",
+                    "2. Botão 'Badges' mostra:",
+                    "   - Ícone da badge",
+                    "   - Nome: 'Badge de 100 Posts'",
+                    "   - Descrição: 'Postou 100 vezes'",
+                    "3. Histórico de posts pagination (mostra 10 por página)"
+                ]
+            },
+            "Ranking (daily/weekly)": {
+                description: "Você vai criar uma página com um placar dos usuários com mais pontos, tipo em um jogo.",
+                tips: [
+                    "1. Página mostra 2 abas: 'Top do Dia' e 'Top da Semana'",
+                    "2. Top do Dia:",
+                    "   - Rank | Nome | Pontos Hoje | Foto",
+                    "   - 1º | João | 250 pts | 📸",
+                    "   - 2º | Maria | 180 pts | 📸",
+                    "   - 3º | Pedro | 120 pts | 📸",
+                    "3. Mostra a posição do usuário logado em destaque",
+                    "4. Atualiza a cada hora (não precisa ser em tempo real)"
+                ]
+            },
+            "Implementar streaks (dias seguidos - login diário)": {
+                description: "Você vai fazer um sistema que conta quantos dias seguidos o usuário ENTRA NO APP (como Snapchat).",
+                tips: [
+                    "1. O que conta como 'dia ativo':",
+                    "   - Apenas fazer LOGIN no app (abrir o app)",
+                    "   - Sistema registra automaticamente quando abre",
+                    "   - NÃO precisa fazer nada além de abrir o app",
+                    "2. Banco de dados:",
+                    "   - usuario.streak = 5 (dias seguidos)",
+                    "   - usuario.ultimo_login = 2025-12-04 (data do último login)",
+                    "3. Lógica automática:",
+                    "   - Usuário abre app hoje? streak += 1",
+                    "   - Passou 1 dia sem abrir? streak = 0, avisa: 'Streak perdido! 😢'",
+                    "4. Mostrar no perfil: 🔥5 dias seguidos",
+                    "5. Pontos: +5 pontos por dia de streak"
+                ]
+            },
+            "Sistema de reações em posts (likes/apoio)": {
+                description: "Você vai criar botões de reação que usuários clicam em posts (tipo Facebook).",
+                tips: [
+                    "1. Botões de reação:",
+                    "   - ❤️ Apoio",
+                    "   - 💪 Força",
+                    "   - 🤗 Abraço virtual",
+                    "   - ⭐ Inspirador",
+                    "2. Quando clica:",
+                    "   - Registra no banco: reacoes (user_id, post_id, tipo, data)",
+                    "   - Quem REAGIU ganha: +2 pontos",
+                    "   - Quem RECEBEU reação: +3 pontos",
+                    "3. Mostrar contador:",
+                    "   - ❤️ 15  💪 8  🤗 3",
+                    "4. Limitar: 1 reação por usuário por post"
+                ]
+            },
+            "Sistema de comentários em posts": {
+                description: "Você vai permitir que usuários comentem em posts de outras pessoas.",
+                tips: [
+                    "1. Comentário = texto curto (máx 500 caracteres)",
+                    "2. Banco de dados:",
+                    "   - comentarios (id, post_id, user_id, texto, data)",
+                    "3. Pontuação automática:",
+                    "   - Quem COMENTOU: +5 pontos",
+                    "   - Quem RECEBEU comentário: +3 pontos",
+                    "4. Mostrar embaixo do post:",
+                    "   - Nome do usuário + texto + data",
+                    "5. Moderação: filtro básico de palavrões"
+                ]
+            },
+            "Testes E2E e correções críticas": {
+                description: "Você vai testar o app completo como um usuário real: cadastro, post, resposta, tudo. E corrigir bugs graves.",
+                tips: [
+                    "1. Roteiro de testes (simule um usuário novo):",
+                    "   - Abra o app",
+                    "   - Clique em 'Cadastrar'",
+                    "   - Digite email, crie senha",
+                    "   - Recebe email? Clique no link",
+                    "   - Consegue fazer login?",
+                    "   - Consegue fazer um post?",
+                    "   - Post aparece no feed?",
+                    "   - Bot respondeu?",
+                    "   - Ganharam pontos?",
+                    "   - Pontos aparecem no perfil?",
+                    "2. Se algo não funciona → anota → corrige hoje",
+                    "3. Bugs críticos: login não funciona, post some, pontos errados"
+                ]
+            },
+            "Script de recrutamento/test plan": {
+                description: "Você vai planejar como encontrar as primeiras pessoas para testar o app e o que pedir feedback delas.",
+                tips: [
+                    "1. Encontre 20-30 pessoas para testar:",
+                    "   - Amigos que enfrentam depressão/ansiedade",
+                    "   - Grupos de saúde mental em redes sociais",
+                    "   - Envie email: 'Estou criando um app, quer testar?'",
+                    "2. Crie um formulário simples no Google Forms com perguntas:",
+                    "   - 'Conseguiu cadastrar facilmente?' (Sim/Não)",
+                    "   - 'Encontrou bugs ou problemas?' (texto)",
+                    "   - 'O que melhorar?' (texto)",
+                    "   - 'Voltaria a usar?' (Sim/Talvez/Não)",
+                    "3. Defina métricas: quantas pessoas conseguiram postar? Quantas voltaram?"
+                ]
+            },
+            "Instrumentação analytics (events)": {
+                description: "Você vai rastrear o que os usuários fazem no app: quantos postam, quantos clicam em botões, etc.",
+                tips: [
+                    "1. Use Google Analytics ou Mixpanel (grátis)",
+                    "2. Rastreie eventos importantes:",
+                    "   - Usuário cadastrou",
+                    "   - Usuário fez primeiro post",
+                    "   - Usuário leu post",
+                    "   - Usuário recebeu resposta",
+                    "   - Usuário clicou em ranking",
+                    "   - Usuário clicou em perfil",
+                    "3. No código, adicione (exemplo):",
+                    "   - analytics.track('user_signed_up', {email: user.email})",
+                    "   - analytics.track('post_created', {user_id: user.id})",
+                    "4. Dashboard: veja em tempo real o que as pessoas fazem"
+                ]
+            },
+            "Definir features premium (lista objetiva)": {
+                description: "Você vai decidir qual funcionalidade é grátis e qual é paga (só para quem assina).",
+                tips: [
+                    "1. GRÁTIS (pode fazer qualquer um):",
+                    "   - Cadastrar",
+                    "   - Postar e ver respostas",
+                    "   - Ver ranking",
+                    "   - Ganhar pontos",
+                    "2. PREMIUM (só quem paga R$30/mês):",
+                    "   - Respostas com IA (mais inteligentes)",
+                    "   - Relatório de humor semanal em PDF",
+                    "   - Badge exclusiva 'Premium' no perfil",
+                    "   - Sem anúncios (se tiver)",
+                    "3. Limites grátis (para incentivar upgrade):",
+                    "   - Máximo 5 posts por dia",
+                    "   - Premium: ilimitado"
+                ]
+            },
+            "Integrar Stripe (test)": {
+                description: "Você vai configurar um sistema de pagamento para cobrar assinatura (R$30/mês) dos usuários premium.",
+                tips: [
+                    "1. Vá a stripe.com, crie conta grátis",
+                    "2. Configure modo TESTE (com cartões fake):",
+                    "   - Cartão teste: 4242 4242 4242 4242",
+                    "   - Data: qualquer data futura (ex: 12/25)",
+                    "   - CVC: qualquer número (ex: 123)",
+                    "3. Instale: npm install @stripe/react-stripe-js stripe",
+                    "4. Crie botão 'Assinar Premium'",
+                    "5. Usuário clica → abre formulário Stripe",
+                    "6. Digita cartão → clica Pagar",
+                    "7. Se funciona: 'Bem-vindo ao Premium! 🎉'",
+                    "8. Depois: limpe a conta de teste, configure produção (real)"
+                ]
+            },
+            "Política de privacidade + termos (rascunho LGPD)": {
+                description: "Você vai escrever documentos legais explicando que respeita dados dos usuários (como a lei LGPD pede).",
+                tips: [
+                    "1. Escreva o que seu app COLETA:",
+                    "   - Nome, email, posts (textos), pontos",
+                    "   - NÃO coleta: localização, fotos, voz",
+                    "2. Escreva por que COLETA:",
+                    "   - Email: para login e recuperar senha",
+                    "   - Posts: para funcionar o app",
+                    "   - Pontos: para calcular ranking",
+                    "3. Escreva os DIREITOS do usuário:",
+                    "   - Direito de ver seus dados",
+                    "   - Direito de deletar sua conta",
+                    "   - Direito de pedir dados em formato PDF",
+                    "4. Use template: termly.com ou iubenda.com (grátis)"
+                ]
+            },
+            "Landing otimizada + copy + SEO básico": {
+                description: "Você vai melhorar a página inicial para mais pessoas entrarem no app. Será encontrada no Google.",
+                tips: [
+                    "1. COPY (texto) deve ser claro e convincente:",
+                    "   - Título: 'Cuide da sua Saúde Mental. Compartilhe. Cresça.'",
+                    "   - Subtítulo: 'Um app feito por pessoas que entendem saúde mental'",
+                    "   - Botão: 'Começar Grátis' bem grande e colorido",
+                    "2. SEO (para aparecer no Google):",
+                    "   - Meta title: 'Micro Therapy Social - App de Saúde Mental'",
+                    "   - Meta description: 'Compartilhe seus problemas, receba respostas de especialistas. Grátis!'",
+                    "   - Adicione keywords: saúde mental, depressão, ansiedade, app",
+                    "   - Texto no site deve falar sobre essas palavras",
+                    "3. Design:",
+                    "   - Cores calmas: azul, roxo",
+                    "   - Ícones que ilustrem cada benefício",
+                    "   - Depoimentos de usuários (depois)"
+                ]
+            },
+            "Onboarding no app + emails de retenção": {
+                description: "Você vai mostrar um tour para usuários novos (primeiros passos) e enviar emails automáticos para mantê-los usando.",
+                tips: [
+                    "1. ONBOARDING (primeiras 3 telas):",
+                    "   - Tela 1: 'Bem-vindo! 👋 Este app ajuda sua saúde mental'",
+                    "   - Tela 2: 'Compartilhe seus pensamentos sem medo' + screenshot",
+                    "   - Tela 3: 'Ganhe pontos e badges! 🏆' + como funciona",
+                    "   - Botão: 'Vamos começar!' → leva ao primeiro post",
+                    "2. EMAILS automáticos:",
+                    "   - Dia 1 (cadastrou): 'Bem-vindo ao Micro Therapy Social!'",
+                    "   - Dia 3: 'Ei! Que tal fazer seu primeiro post?'",
+                    "   - Dia 7: 'Parabéns! 🎉 Você fez 5 posts!'",
+                    "   - Dia 14: 'Que desafio você quer tentar?'",
+                    "3. Segmente: só mande se a pessoa ainda não fez a ação"
+                ]
+            },
+            "Revisão queries e índices": {
+                description: "Você vai deixar o banco de dados mais rápido (tipo quando Google indexa seu site, fica mais rápido de procurar).",
+                tips: [
+                    "1. Encontre queries lentas:",
+                    "   - 'Me traz todos os posts em ordem de novo' demora?",
+                    "   - 'Me traz pontos totais do usuário' demora?",
+                    "2. Crie índices (tipo um índice de livro):",
+                    "   - Sem índice: procura página por página (LENTO)",
+                    "   - Com índice: vai direto (RÁPIDO)",
+                    "   - Exemplo: criar índice em usuario_id do posts",
+                    "3. No Supabase: SQL",
+                    "   - CREATE INDEX idx_posts_usuario ON posts(user_id)",
+                    "   - CREATE INDEX idx_posts_data ON posts(data_criacao DESC)",
+                    "4. Teste antes/depois: query ainda está lenta?"
+                ]
+            },
+            "Cache de ranking / CDN para assets estáticos": {
+                description: "Você vai guardar dados (como ranking) em memória para responder muito mais rápido, e usar servidor externo para fotos/CSS.",
+                tips: [
+                    "1. CACHE (guardar resultado):",
+                    "   - Ranking muda a cada hora, certo?",
+                    "   - Então guarde no cache por 1 hora",
+                    "   - Próxima pessoa que pede ranking? Usa cache (super rápido)",
+                    "   - Use Redis (grátis no Render)",
+                    "2. CDN (servidor externo para fotos/CSS/JS):",
+                    "   - Use Cloudflare (grátis)",
+                    "   - Fotos carregam mais rápido de CDN",
+                    "   - Configure: 'Usar CDN para /static'",
+                    "3. Resultado: app fica 2-3x mais rápido"
+                ]
+            },
+            "Monitoramento e alertas (Sentry / Prometheus)": {
+                description: "Você vai configurar um sistema que avisa quando algo dá erro no app (tipo alarme).",
+                tips: [
+                    "1. SENTRY (rastreia erros):",
+                    "   - Crie conta grátis em sentry.io",
+                    "   - Quando usuário encontra erro, app envia para Sentry",
+                    "   - Você recebe notificação: 'Erro: LoginError em 5 usuários'",
+                    "   - Clica e vê: onde deu erro, qual linha de código",
+                    "2. ALERTAS:",
+                    "   - Configurar alerta: se 100 erros em 1 hora → avisa",
+                    "   - Configurar alerta: se servidor lento (>3s) → avisa",
+                    "   - Recebe no email/Slack",
+                    "3. Dashboard: veja estatísticas em tempo real"
+                ]
+            },
+            "Checklist final e deploy público": {
+                description: "Você vai fazer uma lista de verificação final (tudo ok?) e colocar o app online para as pessoas de verdade usarem.",
+                tips: [
+                    "1. CHECKLIST antes de lançar:",
+                    "   - [ ] Todos os testes passam",
+                    "   - [ ] Sem bugs críticos encontrados",
+                    "   - [ ] Backups testados e funcionando",
+                    "   - [ ] Monitoramento ativo (Sentry)",
+                    "   - [ ] Políticas privacidade pronto",
+                    "   - [ ] Código limpo e comentado",
+                    "   - [ ] Performance boa (<3s para carregar)",
+                    "2. DEPLOY no Render/Vercel:",
+                    "   - Conecte GitHub",
+                    "   - Configure variáveis de ambiente (.env)",
+                    "   - Rode build e deploy",
+                    "3. TESTE na produção:",
+                    "   - Cadastra, posta, responde?",
+                    "   - Tudo funciona?"
+                ]
+            }
+        };
+
+        function showTaskDetails(taskTitle) {
+            const details = taskDescriptions[taskTitle] || {
+                description: "Tarefa: " + taskTitle,
+                tips: ["Consulte o plano detalhado para mais informações"]
+            };
+
+            const body = document.getElementById('taskDetailsBody');
+            body.innerHTML = `
+                <div class="task-details-title">${taskTitle}</div>
+                <div class="task-details-description">
+                    <h4>📋 Descrição</h4>
+                    <p>${details.description}</p>
+                </div>
+                <div class="task-details-tips">
+                    <h4>💡 Como fazer</h4>
+                    <ul>
+                        ${details.tips.map(tip => `<li>${tip}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('taskDetailsModal').classList.add('show');
+        }
+
+        function closeTaskDetails() {
+            document.getElementById('taskDetailsModal').classList.remove('show');
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeTaskDetails();
+            }
+        });
+    </script>
+</body>
+</html>
