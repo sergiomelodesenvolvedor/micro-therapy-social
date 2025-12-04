@@ -86,18 +86,293 @@ App web que permite usuários postarem pensamentos negativos/ansiosos e recebere
 
 ## 📊 Arquitetura
 
+### Diagrama de Alto Nível
+
 ```
-┌─────────────────────────────────────────┐
-│     Frontend (HTML/CSS/JS Puro)         │
-│  localhost:3000 (Live Server)           │
-└────────────────┬────────────────────────┘
-                 │
-┌────────────────▼────────────────────────┐
-│      API Backend (Node/FastAPI)         │
-│  localhost:3001 / railway.app           │
-└────────────────┬────────────────────────┘
-                 │
-    ┌────────────┼────────────┐
+┌──────────────────────────────────────────────────────────────────┐
+│                        MICRO THERAPY SOCIAL                       │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌─────────────────┐         ┌──────────────────┐                │
+│  │   🖥️ FRONTEND    │         │   🤖 BOT LAYER   │                │
+│  │  HTML/CSS/JS    │         │  Telegram/Discord│                │
+│  │ (Navegador)     │         │  Webhooks        │                │
+│  └────────┬────────┘         └────────┬─────────┘                │
+│           │                           │                           │
+│           └───────────┬───────────────┘                           │
+│                       │                                            │
+│                  REST API                                          │
+│                 (HTTPS)                                            │
+│                       │                                            │
+│                       ▼                                            │
+│           ┌───────────────────────┐                               │
+│           │  🔐 BACKEND API       │                               │
+│           │  Node.js + Express    │                               │
+│           │  Railway.app          │                               │
+│           │                       │                               │
+│           │ • Auth (JWT)          │                               │
+│           │ • Posts CRUD          │                               │
+│           │ • Pontuação           │                               │
+│           │ • Badges              │                               │
+│           │ • Pagamentos (Stripe) │                               │
+│           │ • IA (OpenAI)         │                               │
+│           └───────────┬───────────┘                               │
+│                       │                                            │
+│        ┌──────────────┼──────────────┐                            │
+│        │              │              │                            │
+│        ▼              ▼              ▼                            │
+│    ┌────────┐   ┌──────────┐  ┌────────────┐                    │
+│    │Supabase│   │  Stripe  │  │  OpenAI    │                    │
+│    │(DB)    │   │(Payments)│  │   (IA)     │                    │
+│    └────────┘   └──────────┘  └────────────┘                    │
+│                                                                    │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### Fluxo de um Post (End-to-End)
+
+```
+1️⃣ USUÁRIO CRIA POST
+   ┌────────────────────────────────────────┐
+   │ Usuário escreve no Frontend            │
+   │ "Estou com muita ansiedade hoje..."    │
+   └───────────┬────────────────────────────┘
+               │
+               ▼
+   ┌────────────────────────────────────────┐
+   │ Frontend envia POST /api/posts         │
+   │ com JWT token + conteúdo               │
+   └───────────┬────────────────────────────┘
+               │
+2️⃣ BACKEND PROCESSA
+               ▼
+   ┌────────────────────────────────────────┐
+   │ Backend valida token (JWT)             │
+   │ Verifica usuário no Supabase           │
+   └───────────┬────────────────────────────┘
+               │
+               ▼
+   ┌────────────────────────────────────────┐
+   │ Salva post no Supabase (DB)            │
+   │ Atualiza pontos do usuário             │
+   │ Cria badge se aplicável                │
+   └───────────┬────────────────────────────┘
+               │
+3️⃣ BOT RESPONDE
+               ▼
+   ┌────────────────────────────────────────┐
+   │ Backend chama OpenAI com contexto      │
+   │ (ou usa template se premium false)     │
+   └───────────┬────────────────────────────┘
+               │
+               ▼
+   ┌────────────────────────────────────────┐
+   │ Recebe resposta de apoio               │
+   │ "Você é forte! Respire fundo..."       │
+   └───────────┬────────────────────────────┘
+               │
+4️⃣ NOTIFICAÇÃO
+               ▼
+   ┌────────────────────────────────────────┐
+   │ Bot envia no Telegram/Discord          │
+   │ "Você recebeu uma resposta!"           │
+   └───────────┬────────────────────────────┘
+               │
+5️⃣ USUÁRIO VÊ RESPOSTA
+               ▼
+   ┌────────────────────────────────────────┐
+   │ Frontend busca /api/posts/:id          │
+   │ Mostra post + resposta + pontos        │
+   │ Usuário vê badge desbloqueada          │
+   └────────────────────────────────────────┘
+```
+
+### Componentes Detalhados
+
+#### Frontend (3000)
+```
+┌─ index.html
+│  ├─ Feed (lista de posts)
+│  ├─ Criar Post (formulário)
+│  ├─ Perfil (pontos, badges)
+│  ├─ Ranking (leaderboard)
+│  └─ Autenticação (magic link)
+│
+└─ API calls
+   ├─ GET /api/health (verificar servidor)
+   ├─ GET /api/posts (listar)
+   ├─ POST /api/posts (criar)
+   ├─ GET /api/users/:id (perfil)
+   └─ GET /api/rankings (top 10)
+```
+
+#### Backend (3001)
+```
+┌─ src/index.js (servidor principal)
+│
+├─ src/routes/
+│  ├─ health.js (status do servidor)
+│  ├─ posts.js (criar/listar/editar posts)
+│  ├─ users.js (perfil, pontos, badges)
+│  ├─ rankings.js (leaderboard)
+│  └─ auth.js (login via magic link)
+│
+├─ src/controllers/
+│  ├─ postController.js (lógica de posts)
+│  ├─ userController.js (lógica de usuários)
+│  └─ pointController.js (cálculo de pontos)
+│
+├─ src/services/
+│  ├─ supabase.js (banco de dados)
+│  ├─ openai.js (respostas com IA)
+│  ├─ stripe.js (pagamentos)
+│  └─ telegram.js (notificações)
+│
+└─ src/middleware/
+   ├─ auth.js (validação JWT)
+   └─ errorHandler.js (tratamento de erros)
+```
+
+#### Banco de Dados (Supabase)
+```
+┌─ users
+│  ├─ id (UUID)
+│  ├─ email
+│  ├─ username
+│  ├─ avatar_url
+│  ├─ points (int)
+│  ├─ created_at
+│  └─ premium (bool)
+│
+├─ posts
+│  ├─ id (UUID)
+│  ├─ user_id (FK)
+│  ├─ content (text)
+│  ├─ bot_response (text)
+│  ├─ likes (int)
+│  └─ created_at
+│
+├─ badges
+│  ├─ id (UUID)
+│  ├─ user_id (FK)
+│  ├─ name
+│  ├─ description
+│  ├─ icon_url
+│  └─ unlocked_at
+│
+├─ comments
+│  ├─ id (UUID)
+│  ├─ post_id (FK)
+│  ├─ user_id (FK)
+│  ├─ content
+│  └─ created_at
+│
+└─ payments
+   ├─ id (UUID)
+   ├─ user_id (FK)
+   ├─ stripe_id
+   ├─ status
+   ├─ amount
+   └─ created_at
+```
+
+### Fluxo de Autenticação
+
+```
+NOVO USUÁRIO:
+1. Clica em "Entrar"
+2. Digita email
+3. Backend envia magic link
+4. Usuário clica no link
+5. Frontend recebe JWT token
+6. Salva no localStorage
+7. Faz requisições com Authorization: Bearer <token>
+
+LOGIN POSTERIOR:
+1. Clica em "Entrar"
+2. Digita email
+3. Recebe link
+4. Clica
+5. Volta com novo JWT
+```
+
+### Fluxo de Gamificação
+
+```
+POST CRIADO:
+├─ +10 pontos (ato de desabafar)
+└─ Badge: "Primeira voz" (se primeiro post)
+
+BOT RESPONDE:
+├─ +5 pontos (recebeu apoio)
+└─ Badge: "Apoiado" (se receber resposta)
+
+REAÇÕES (Sprint 5):
+├─ +1 ponto por like (ato de reagir)
+├─ +2 pontos por reação positiva
+└─ Badge: "Inspiração" (50+ likes)
+
+STREAKS (Sprint 5):
+├─ +1 ponto por dia consecutivo
+├─ 7 dias: Badge "Uma Semana"
+└─ 30 dias: Badge "Um Mês"
+```
+
+### Serviços Externos
+
+```
+┌─ SUPABASE (Database)
+│  └─ PostgreSQL hostado
+│     • Realtime updates
+│     • Auth integration
+│     • Backups automáticos
+│
+├─ STRIPE (Pagamentos)
+│  └─ Test mode (começar)
+│     • Assinaturas mensais/anuais
+│     • Webhooks de status
+│     • Dashboard de analytics
+│
+├─ OPENAI (IA - Sprint 8)
+│  └─ API GPT-3.5 / GPT-4
+│     • Gera respostas personalizadas
+│     • Análise de sentimento
+│     • Relatórios de humor
+│
+├─ TELEGRAM (Bot - Sprint 3)
+│  └─ Notificações em tempo real
+│     • Aviso de respostas
+│     • Ranking diário
+│     • Lembretes motivacionais
+│
+└─ RAILWAY (Hosting - Sprint 2)
+   └─ Deployment automático via Git
+      • Auto-rebuild em push
+      • Logs em tempo real
+      • Variáveis de ambiente
+```
+
+### Segurança
+
+```
+┌─ Frontend
+│  ├─ HTTPS apenas
+│  ├─ JWT no localStorage
+│  └─ CORS configurado
+│
+├─ Backend
+│  ├─ JWT validation em todos endpoints
+│  ├─ Rate limiting
+│  ├─ Validação de inputs
+│  ├─ Helmet.js (headers seguros)
+│  └─ Morgan (logs)
+│
+└─ Banco de Dados
+   ├─ Row Level Security (RLS)
+   ├─ Backups automáticos
+   ├─ Encryption at rest
+   └─ LGPD compliance (Sprint 9)
+```
     │            │            │
 ┌───▼──┐  ┌─────▼──┐  ┌────▼──┐
 │ DB   │  │ Auth   │  │ Bot   │
