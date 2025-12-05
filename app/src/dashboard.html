@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro Therapy - App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .logo-sidebar {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nav-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item span {
+            margin-right: 10px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post-author {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .post-badge {
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .post-content {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            color: #667eea;
+        }
+
+        /* SIDEBAR RIGHT */
+        .sidebar-right {
+            background: white;
+            padding: 20px;
+            border-left: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        .widget-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .widget-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .widget-item-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .widget-item-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar, .sidebar-right {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR ESQUERDA -->
+        <aside class="sidebar">
+            <div class="logo-sidebar">🧠</div>
+            <div class="nav-item active">
+                <span>📰</span> Feed
+            </div>
+            <div class="nav-item">
+                <span>📝</span> Meus Posts
+            </div>
+            <div class="nav-item">
+                <span>👥</span> Comunidade
+            </div>
+            <div class="nav-item">
+                <span>🏆</span> Rankings
+            </div>
+            <div class="nav-item">
+                <span>⚙️</span> Configurações
+            </div>
+            <div class="nav-item" style="margin-top: 50px;">
+                <span>🚪</span> Sair
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Bem-vindo de volta! 👋</h1>
+                <div style="text-align: right;">
+                    <div style="color: #666; font-size: 0.9em;">Seu Streak</div>
+                    <div style="font-size: 1.8em; font-weight: 700; color: #667eea;">🔥 7 dias</div>
+                </div>
+            </div>
+
+            <div class="post-form">
+                <h3 style="margin-bottom: 15px; color: #333;">Como você está se sentindo?</h3>
+                <form onsubmit="handlePostSubmit(event)">
+                    <div class="form-group">
+                        <textarea id="postContent" placeholder="Compartilhe seus pensamentos..." rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="anonymous" name="anonymous">
+                        <label for="anonymous" style="margin-bottom: 0;">Postar anonimamente</label>
+                    </div>
+
+                    <button type="submit" class="btn">Postar (+ 10 pontos) ✨</button>
+                </form>
+            </div>
+
+            <div class="feed">
+                <!-- POST 1 -->
+                <div class="post">
+                    <div class="post-header">
+                        <div>
+                            <div class="post-author">João Silva</div>
+                            <div class="post-badge">há 2 horas</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        "Tive um dia difícil no trabalho, mas consegui seguir em frente. Muito grato pelo suporte que recebo aqui 🙏"
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn" title="Gostar">❤️ 12</button>
+                        <button class="action-btn" title="Apoiar">🤝 5</button>
+                        <button class="action-btn" title="Abraço">🤗 3</button>
+                        <button class="action-btn" title="Comentar">💬 2</button>
+                    </div>
+                </div>
+
+                <!-- POST 2 -->
+                <div class="post">
+                    <div class="post-header">
+                        <div>
+                            <div class="post-author">Anônimo</div>
+                            <div class="post-badge">há 4 horas</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        "Finalmente consegui coragem para buscar ajuda. Primeira semana na plataforma e já sinto diferença!"
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn" title="Gostar">❤️ 34</button>
+                        <button class="action-btn" title="Apoiar">🤝 18</button>
+                        <button class="action-btn" title="Abraço">🤗 12</button>
+                        <button class="action-btn" title="Comentar">💬 7</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- SIDEBAR DIREITA -->
+        <aside class="sidebar-right">
+            <div class="widget-title">Meus Pontos</div>
+            <div class="widget-item">
+                <div class="widget-item-title">Total</div>
+                <div class="widget-item-value">1,250</div>
+            </div>
+            <div class="widget-item">
+                <div class="widget-item-title">Esta Semana</div>
+                <div class="widget-item-value">320</div>
+            </div>
+
+            <div class="widget-title" style="margin-top: 30px;">Badges Desbloqueadas</div>
+            <div class="widget-item" style="text-align: center;">
+                <div style="font-size: 2em; margin-bottom: 5px;">🎯</div>
+                <div class="widget-item-title">Iniciador</div>
+                <div style="font-size: 0.8em; color: #666;">Primeiro post</div>
+            </div>
+            <div class="widget-item" style="text-align: center;">
+                <div style="font-size: 2em; margin-bottom: 5px;">🔥</div>
+                <div class="widget-item-title">Semanal</div>
+                <div style="font-size: 0.8em; color: #666;">7 dias seguidos</div>
+            </div>
+
+            <div class="widget-title" style="margin-top: 30px;">Próximas Badges</div>
+            <div class="widget-item">
+                <div class="widget-item-title">🏆 Liderança</div>
+                <div style="font-size: 0.8em; color: #999;">Top 10 ranking</div>
+                <div style="width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-top: 8px;">
+                    <div style="width: 65%; height: 100%; background: #667eea; border-radius: 3px;"></div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        function handlePostSubmit(event) {
+            event.preventDefault();
+            alert('✓ Post publicado com sucesso! +10 pontos');
+            document.getElementById('postContent').value = '';
+        }
+    </script>
+</body>
+</html>

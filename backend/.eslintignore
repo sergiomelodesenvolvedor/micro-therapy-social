@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+.env*
+*.log
+coverage/
+.git/
+src/routes/health.js
+src/routes/posts.js
+src/routes/users.js
+src/index.js

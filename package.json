@@ -13,7 +13,8 @@
     "lint": "cd backend && npm run lint",
     "lint:backend": "cd backend && npm run lint",
     "format": "prettier --write \"**/*.{js,html,css,md,json}\"",
-    "deploy": "npm run build && npm run deploy:backend"
+    "deploy": "npm run build && npm run deploy:backend",
+    "db:test": "cd backend && node --exit src/database/test-connection.js"
   },
   "keywords": [
     "mental-health",

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+echo "${YELLOW}🔍 Running pre-commit checks...${NC}\n"
+
+# Run lint-staged
+echo "${YELLOW}📝 Checking code style and format...${NC}"
+npx lint-staged
+
+if [ $? -ne 0 ]; then
+  echo "${RED}❌ Pre-commit checks failed!${NC}"
+  exit 1
+fi
+
+echo "${GREEN}✅ Pre-commit checks passed!${NC}\n"
+exit 0

@@ -8,6 +8,12 @@ yarn.lock
 .env.local
 .env.*.local
 
+# Security - Never commit credentials
+CREDENTIALS.md
+*.key
+*.pem
+secrets/
+
 # IDE
 .vscode/
 .idea/

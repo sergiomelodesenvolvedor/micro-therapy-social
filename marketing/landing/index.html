@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Micro Therapy Social - Plataforma de saúde mental gamificada com IA. Suporte rápido, comunidade e pontos" />
+    <meta name="keywords" content="saúde mental, terapia, app mental health, ansiedade, depressão" />
+    <meta property="og:title" content="Micro Therapy Social - Seu App de Saúde Mental" />
+    <meta property="og:description" content="Poste seus pensamentos, receba apoio de especialistas, ganhe pontos" />
+    <title>Micro Therapy Social - Saúde Mental Gamificada</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+
+      /* HEADER / NAVBAR */
+      header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.6em;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      nav a {
+        color: white;
+        text-decoration: none;
+        margin-left: 25px;
+        transition: opacity 0.3s ease;
+        font-weight: 500;
+        font-size: 0.95em;
+      }
+
+      nav a:hover {
+        opacity: 0.8;
+      }
+
+      .btn-demo {
+        background: white;
+        color: #667eea;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        border: none;
+        margin-left: 20px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-demo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      /* HERO SECTION */
+      .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 140px 20px 100px;
+        text-align: center;
+        margin-top: 50px;
+      }
+
+      .hero-container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .hero h1 {
+        font-size: 3.8em;
+        margin-bottom: 20px;
+        font-weight: 800;
+        line-height: 1.2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero-subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        line-height: 1.8;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-icon {
+        font-size: 4.5em;
+        margin-bottom: 15px;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 40px;
+      }
+
+      .btn-primary {
+        background: white;
+        color: #667eea;
+        padding: 18px 45px;
+        font-size: 1.1em;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: white;
+        padding: 18px 45px;
+        font-size: 1.1em;
+        border: 2px solid white;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: white;
+        color: #667eea;
+      }
+
+      /* WAITLIST SECTION - PROMINENT */
+      .waitlist-cta {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        padding: 60px 20px;
+        text-align: center;
+        color: white;
+        margin-top: -40px;
+        position: relative;
+        z-index: 10;
+      }
+
+      .waitlist-cta h2 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+      }
+
+      .waitlist-cta p {
+        font-size: 1.2em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+      }
+
+      .waitlist-form {
+        max-width: 500px;
+        margin: 0 auto;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .waitlist-input {
+        flex: 1;
+        min-width: 250px;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1em;
+        background: white;
+      }
+
+      .waitlist-btn {
+        padding: 14px 35px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+      }
+
+      .waitlist-btn:hover {
+        background: #764ba2;
+        transform: translateY(-2px);
+      }
+
+      /* BENEFITS SECTION */
+      .benefits {
+        padding: 80px 20px;
+        background: #f8f9fa;
+      }
+
+      .benefits-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 2.8em;
+        margin-bottom: 60px;
+        color: #333;
+        font-weight: 700;
+      }
+
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+      }
+
+      .benefit-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+      }
+
+      .benefit-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .benefit-icon {
+        font-size: 3.5em;
+        margin-bottom: 20px;
+      }
+
+      .benefit-card h3 {
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        color: #667eea;
+      }
+
+      .benefit-card p {
+        color: #666;
+        line-height: 1.8;
+        font-size: 1em;
+      }
+
+      /* SOCIAL PROOF */
+      .social-proof {
+        background: white;
+        padding: 60px 20px;
+        text-align: center;
+      }
+
+      .social-proof-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+      }
+
+      .stat {
+        padding: 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+      }
+
+      .stat-number {
+        font-size: 2.8em;
+        font-weight: 800;
+        margin-bottom: 10px;
+      }
+
+      .stat-label {
+        font-size: 1.1em;
+        opacity: 0.95;
+      }
+
+      .testimonials {
+        margin-top: 60px;
+      }
+
+      .testimonials h3 {
+        font-size: 2em;
+        margin-bottom: 40px;
+        color: #333;
+      }
+
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+      }
+
+      .testimonial {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+      }
+
+      .testimonial-text {
+        font-size: 0.95em;
+        color: #555;
+        margin-bottom: 20px;
+        line-height: 1.8;
+        font-style: italic;
+      }
+
+      .testimonial-author {
+        font-weight: 600;
+        color: #667eea;
+      }
+
+      .testimonial-role {
+        font-size: 0.85em;
+        color: #999;
+      }
+
+      /* PRICING SECTION */
+      .pricing {
+        padding: 80px 20px;
+        background: #f8f9fa;
+      }
+
+      .pricing-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .pricing-title {
+        text-align: center;
+        font-size: 2.8em;
+        margin-bottom: 60px;
+        color: #333;
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .pricing-card {
+        background: white;
+        padding: 50px 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .pricing-card.featured {
+        border: 3px solid #667eea;
+        transform: scale(1.05);
+      }
+
+      .pricing-card:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .pricing-badge {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #f5576c;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.85em;
+      }
+
+      .plan-name {
+        font-size: 1.5em;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .plan-price {
+        font-size: 3em;
+        font-weight: 800;
+        color: #667eea;
+        margin-bottom: 10px;
+      }
+
+      .plan-price span {
+        font-size: 0.4em;
+        color: #999;
+      }
+
+      .plan-description {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 0.95em;
+      }
+
+      .plan-features {
+        list-style: none;
+        margin-bottom: 40px;
+        text-align: left;
+      }
+
+      .plan-features li {
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+        color: #555;
+      }
+
+      .plan-features li:before {
+        content: "✓ ";
+        color: #667eea;
+        font-weight: bold;
+        margin-right: 10px;
+      }
+
+      .plan-btn {
+        padding: 14px 30px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+        width: 100%;
+      }
+
+      .plan-btn.primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .plan-btn.primary:hover {
+        background: #764ba2;
+      }
+
+      .plan-btn.secondary {
+        background: #f0f0f0;
+        color: #667eea;
+      }
+
+      .plan-btn.secondary:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      /* FAQ SECTION */
+      .faq {
+        padding: 80px 20px;
+        background: white;
+      }
+
+      .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .faq-title {
+        text-align: center;
+        font-size: 2.8em;
+        margin-bottom: 60px;
+        color: #333;
+      }
+
+      .faq-item {
+        margin-bottom: 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .faq-question {
+        padding: 20px;
+        background: #f8f9fa;
+        cursor: pointer;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .faq-question:hover {
+        background: #f0f0f0;
+      }
+
+      .faq-icon {
+        font-size: 1.5em;
+        transition: transform 0.3s ease;
+      }
+
+      .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+      }
+
+      .faq-answer {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        color: #555;
+        line-height: 1.8;
+      }
+
+      .faq-item.active .faq-answer {
+        padding: 20px;
+        max-height: 500px;
+      }
+
+      /* CTA FINAL */
+      .cta-final {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 20px;
+        text-align: center;
+        color: white;
+      }
+
+      .cta-final-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .cta-final h2 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+      }
+
+      .cta-final p {
+        font-size: 1.2em;
+        margin-bottom: 40px;
+        opacity: 0.95;
+      }
+
+      /* FOOTER */
+      footer {
+        background: #333;
+        color: white;
+        padding: 40px 20px;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-links {
+        margin-bottom: 20px;
+      }
+
+      .footer-links a {
+        color: #aaa;
+        text-decoration: none;
+        margin: 0 15px;
+        transition: color 0.3s ease;
+      }
+
+      .footer-links a:hover {
+        color: #667eea;
+      }
+
+      .footer-text {
+        color: #777;
+        font-size: 0.9em;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.2em;
+        }
+
+        .hero-subtitle {
+          font-size: 1.1em;
+        }
+
+        .section-title {
+          font-size: 2em;
+        }
+
+        nav {
+          display: none;
+        }
+
+        .cta-buttons {
+          flex-direction: column;
+        }
+
+        .btn-primary, .btn-secondary {
+          width: 100%;
+        }
+
+        .waitlist-form {
+          flex-direction: column;
+        }
+
+        .waitlist-input {
+          width: 100%;
+        }
+
+        .waitlist-btn {
+          width: 100%;
+        }
+
+        .pricing-card.featured {
+          transform: scale(1);
+        }
+
+        .pricing-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero h1 {
+          font-size: 1.8em;
+          margin-bottom: 15px;
+        }
+
+        .hero-subtitle {
+          font-size: 1em;
+        }
+
+        .hero-icon {
+          font-size: 3em;
+        }
+
+        .section-title {
+          font-size: 1.6em;
+          margin-bottom: 30px;
+        }
+
+        .benefit-icon {
+          font-size: 2.5em;
+        }
+
+        .stat-number {
+          font-size: 2em;
+        }
+
+        .cta-final h2 {
+          font-size: 1.8em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <div class="navbar-container">
+        <div class="logo">
+          <span>🧠</span>
+          <span>Micro Therapy</span>
+        </div>
+        <nav>
+          <a href="#benefits">Benefícios</a>
+          <a href="#pricing">Preços</a>
+          <a href="#faq">FAQ</a>
+          <button class="btn-demo" onclick="scrollToWaitlist()">Beta Grátis</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero-container">
+        <div class="hero-icon">💬</div>
+        <h1>Saúde Mental que Funciona</h1>
+        <p class="hero-subtitle">
+          Compartilhe seus sentimentos. Receba suporte instantâneo. Ganhe pontos e desbloqueie badges enquanto cuida da sua saúde mental.
+        </p>
+        <div class="cta-buttons">
+          <button class="btn-primary" onclick="scrollToWaitlist()">Entrar na Beta Grátis</button>
+          <button class="btn-secondary" onclick="alert('Assistir vídeo demo em breve!')">Ver Demo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAITLIST - PRINCIPAL CTA -->
+    <section class="waitlist-cta">
+      <div class="waitlist-cta">
+        <h2>🚀 Seja o Primeiro a Usar</h2>
+        <p>Entrar na beta fechada. Apenas 1.000 primeiros usuários.</p>
+        <form class="waitlist-form" onsubmit="handleWaitlist(event)" id="waitlistForm">
+          <input 
+            type="email" 
+            class="waitlist-input" 
+            placeholder="seu@email.com" 
+            required 
+          />
+          <button type="submit" class="waitlist-btn">Me Notifique</button>
+        </form>
+        <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.9;">✅ Sem spam. Cancelar a qualquer momento.</p>
+      </div>
+    </section>
+
+    <!-- BENEFITS SECTION -->
+    <section class="benefits" id="benefits">
+      <div class="benefits-container">
+        <h2 class="section-title">Por Que Usar Micro Therapy?</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">⚡</div>
+            <h3>Respostas Instantâneas</h3>
+            <p>IA especializada em saúde mental responde em menos de 60 segundos. Sempre disponível.</p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon">🏆</div>
+            <h3>Gamificação que Funciona</h3>
+            <p>Ganhe pontos, desbloqueie badges e compita no leaderboard. Saúde mental + diversão.</p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon">👥</div>
+            <h3>Comunidade Real</h3>
+            <p>Conecte-se com pessoas que entendem o que você passa. Suporte mútuo 24/7.</p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon">🔒</div>
+            <h3>100% Privado</h3>
+            <p>Poste anonimamente. Seus dados nunca são compartilhados. Criptografia fim a fim.</p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon">📱</div>
+            <h3>Funciona em Qualquer Lugar</h3>
+            <p>Web, mobile, tablet. Acesse quando precisar. Offline mode incluído.</p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon">💎</div>
+            <h3>Premium Acessível</h3>
+            <p>Básico grátis para sempre. Premium de R$29/mês com IA avançada e relatórios.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <section class="social-proof">
+      <div class="social-proof-container">
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Beta Testers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">4.8★</div>
+            <div class="stat-label">Avaliação Média</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">250K+</div>
+            <div class="stat-label">Conversas Terapêuticas</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">95%</div>
+            <div class="stat-label">Taxa de Satisfação</div>
+          </div>
+        </div>
+
+        <div class="testimonials">
+          <h3>Quem Já Usa, Adora</h3>
+          <div class="testimonials-grid">
+            <div class="testimonial">
+              <div class="testimonial-text">"Finalmente um app que me entende. Não me sinto sozinho(a) mais."</div>
+              <div class="testimonial-author">João Silva</div>
+              <div class="testimonial-role">Beta Tester</div>
+            </div>
+
+            <div class="testimonial">
+              <div class="testimonial-text">"A resposta instantânea me salvou em um momento de crise. Muito grato."</div>
+              <div class="testimonial-author">Maria Santos</div>
+              <div class="testimonial-role">Usuária Premium</div>
+            </div>
+
+            <div class="testimonial">
+              <div class="testimonial-text">"Os pontos e badges me motivam a usar todo dia. Saúde mental virou hábito!"</div>
+              <div class="testimonial-author">Carlos Oliveira</div>
+              <div class="testimonial-role">Streaker 30 dias</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="pricing" id="pricing">
+      <div class="pricing-container">
+        <h2 class="pricing-title">Planos e Preços</h2>
+        <div class="pricing-grid">
+          <!-- Plano Free -->
+          <div class="pricing-card">
+            <div class="plan-name">🎯 Básico</div>
+            <div class="plan-price">Grátis<span>/mês</span></div>
+            <div class="plan-description">Perfeito para começar</div>
+            <ul class="plan-features">
+              <li>Respostas ilimitadas</li>
+              <li>Comunidade</li>
+              <li>Pontos e badges</li>
+              <li>Acesso mobile</li>
+              <li>Suporte por email</li>
+            </ul>
+            <button class="plan-btn secondary" onclick="scrollToWaitlist()">Começar Grátis</button>
+          </div>
+
+          <!-- Plano Premium -->
+          <div class="pricing-card featured">
+            <div class="pricing-badge">MAIS POPULAR</div>
+            <div class="plan-name">💎 Premium</div>
+            <div class="plan-price">R$29<span>/mês</span></div>
+            <div class="plan-description">Recomendado para quem quer mais</div>
+            <ul class="plan-features">
+              <li>✓ Tudo do Básico +</li>
+              <li>IA GPT-4 avançada</li>
+              <li>Relatórios de progresso</li>
+              <li>Sem anúncios</li>
+              <li>Acesso offline</li>
+              <li>Suporte prioritário</li>
+            </ul>
+            <button class="plan-btn primary" onclick="scrollToWaitlist()">Experimentar 7 dias</button>
+          </div>
+
+          <!-- Plano Enterprise -->
+          <div class="pricing-card">
+            <div class="plan-name">🏢 Empresarial</div>
+            <div class="plan-price">Customizado</div>
+            <div class="plan-description">Para equipes e empresas</div>
+            <ul class="plan-features">
+              <li>Licenças em volume</li>
+              <li>Dashboard de analytics</li>
+              <li>SSO / Active Directory</li>
+              <li>Suporte 24/7</li>
+              <li>Customização completa</li>
+            </ul>
+            <button class="plan-btn secondary" onclick="alert('Fale com nosso time: contato@microtherapy.com')">Solicitar Demo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq" id="faq">
+      <div class="faq-container">
+        <h2 class="faq-title">Dúvidas Frequentes</h2>
+
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-question">
+            É realmente seguro compartilhar meus sentimentos?
+            <span class="faq-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            Sim. Seus dados são criptografados com SSL, armazenados em servidores seguros e você pode postar anonimamente. Nunca compartilhamos dados com terceiros.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-question">
+            Isso substitui uma terapia real?
+            <span class="faq-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            Não. Micro Therapy é um suporte complementar, não substitui terapia profissional. Se está em crise, procure ajuda profissional ou ligue 188 (CVV).
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-question">
+            Quanto custa a beta?
+            <span class="faq-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            A beta é 100% grátis. Após o lançamento oficial, oferecemos Básico grátis e Premium a R$29/mês.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-question">
+            Posso cancelar Premium a qualquer momento?
+            <span class="faq-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            Sim, sem taxas de cancelamento. Você pode cancelar a qualquer momento direto no seu painel de configurações.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-question">
+            Funciona offline?
+            <span class="faq-icon">▼</span>
+          </div>
+          <div class="faq-answer">
+            Básico funciona online apenas. Premium inclui modo offline para ler posts e fazer anotações. Respostas de IA necessitam de conexão.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="cta-final">
+      <div class="cta-final-container">
+        <h2>Pronto para Transformar Sua Saúde Mental?</h2>
+        <p>Junte-se aos 1.000 primeiros beta testers e receba acesso VIP vitalício ao Micro Therapy.</p>
+        <button class="btn-primary" onclick="scrollToWaitlist()">Entrar na Beta Agora</button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="#privacy">Privacidade</a>
+          <a href="#terms">Termos</a>
+          <a href="#contact">Contato</a>
+          <a href="#blog">Blog</a>
+          <a href="https://discord.com" target="_blank">Discord</a>
+        </div>
+        <p class="footer-text">
+          © 2025 Micro Therapy Social. Desenvolvido com ❤️ para sua saúde mental.
+        </p>
+        <p class="footer-text" style="margin-top: 10px; font-size: 0.8em;">
+          Não é substituto para terapia profissional. Se está em crise, ligue 188 (CVV).
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      function scrollToWaitlist() {
+        document.querySelector('.waitlist-cta').scrollIntoView({ behavior: 'smooth' });
+        document.querySelector('.waitlist-input').focus();
+      }
+
+      function handleWaitlist(event) {
+        event.preventDefault();
+        
+        const email = document.querySelector('.waitlist-input').value;
+        const form = event.target;
+
+        // Validar email
+        if (!email.includes('@')) {
+          alert('Email inválido!');
+          return;
+        }
+
+        // Simular envio
+        const btn = form.querySelector('.waitlist-btn');
+        btn.textContent = 'Enviando...';
+        
+        setTimeout(() => {
+          alert('✅ Email adicionado à waitlist!\n\nVocê receberá um convite quando a beta abrir.\n\nVerifique seu email.');
+          form.reset();
+          btn.textContent = 'Me Notifique';
+        }, 1000);
+      }
+
+      function toggleFAQ(element) {
+        element.classList.toggle('active');
+      }
+
+      // Auto-open first FAQ
+      document.addEventListener('DOMContentLoaded', function() {
+        const firstFAQ = document.querySelector('.faq-item');
+        if (firstFAQ) {
+          firstFAQ.classList.add('active');
+        }
+      });
+
+      // Add smooth scrolling
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

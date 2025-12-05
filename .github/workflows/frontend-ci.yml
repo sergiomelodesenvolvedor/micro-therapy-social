@@ -1,0 +1,27 @@
+name: CI - Frontend
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check frontend exists
+        run: |
+          if [ -d "frontend" ]; then
+            echo "Frontend directory found"
+          else
+            echo "Frontend directory not found - skipping"
+          fi

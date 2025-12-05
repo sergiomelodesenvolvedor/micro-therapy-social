@@ -2,6 +2,11 @@
 
 🧠 **Plataforma gamificada de micro-intervenções para saúde mental**
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D%2018.0.0-brightgreen)](https://nodejs.org)
+[![Status](https://img.shields.io/badge/Status-Alpha%20v0.1.0-blue)](CHANGELOG.md)
+[![Sprint](https://img.shields.io/badge/Sprint-1%2F12%20✅-success)](plano_detalhado_micro_therapy_social%20\(1\).md)
+
 Uma rede social que ajuda pessoas com ansiedade e depressão através de:
 - ✍️ Posts de desabafos
 - 🤖 Respostas automáticas com dicas
@@ -10,44 +15,277 @@ Uma rede social que ajuda pessoas com ansiedade e depressão através de:
 
 ---
 
-## 🚀 Visão Geral
+## 🎯 Visão Geral Rápida
 
-### O que é?
-App web que permite usuários postarem pensamentos negativos/ansiosos e receberem respostas de apoio de um bot, com sistema de pontos para motivar uso contínuo.
-
-### Por quê?
-- Terapia é cara e demora
-- App fornece resposta **rápida** (< 60s)
-- Gamificação mantém engajamento
-- Comunidade reduz isolamento
-
-### Números do Projeto
-- **Duração:** 24 semanas (6 meses)
-- **Sprints:** 12 (2 semanas cada)
-- **Horas totais:** ~672h (~56h/sprint)
-- **Início:** 8 Dec 2025
-- **Fim:** 25 May 2026
+| Aspecto | Detalhes |
+|--------|----------|
+| **O quê?** | App web para suporte mental com gamificação |
+| **Por quê?** | Terapia cara/demora. App: rápido (<60s), acessível, comunitário |
+| **Para quem?** | Pessoas com ansiedade, depressão, isolamento emocional |
+| **MVP quando?** | 25 de maio de 2026 (Sprint 12) |
+| **Modelo de negócio** | Freemium + Stripe Premium |
 
 ---
 
-## 📋 Stack Recomendado
+## 📊 Progresso Atual
 
-### Backend
-- **Node.js** + Express (ou FastAPI)
-- **Supabase** (PostgreSQL + Auth)
-- **OpenAI API** (IA para respostas)
+**Sprint 1 - CONCLUÍDO ✅**
 
-### Frontend
-- **HTML5** (estrutura)
-- **CSS3** (estilos + animações)
-- **JavaScript** (vanilla, sem frameworks)
+```
+[████████████████████] 100% Complete
 
-### Infraestrutura
-- **Railway/Render** (deploy backend)
-- **Vercel** (deploy frontend)
-- **Stripe** (pagamentos)
+✅ Backend setup (Express + Supabase)
+✅ Database schema (6 tabelas)
+✅ CI/CD (ESLint + Prettier + Husky)
+✅ Landing page (HTML/CSS responsivo)
+✅ Formulário de cadastro (validações)
+✅ Documentação completa
+```
 
-### Bot
+**Próximo:** Sprint 2 - Autenticação & Backend API (22 Dec 2025)
+
+---
+
+## 🚀 Quick Start
+
+### Pré-requisitos
+- Node.js 18+ ou 20+
+- npm ou yarn
+- Conta Supabase (gratuita)
+- Git
+
+### Instalação
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/sergiomelodesenvolvedor/micro-therapy-social.git
+   cd micro-therapy-social
+   ```
+
+2. **Instale dependências:**
+   ```bash
+   # Backend
+   cd backend && npm install && cd ..
+   
+   # Frontend (if needed)
+   cd frontend && npm install && cd ..
+   ```
+
+3. **Configure variáveis de ambiente:**
+   ```bash
+   # Copiar exemplo
+   cp backend/.env.example backend/.env
+   
+   # Editar com suas credenciais Supabase
+   nano backend/.env
+   ```
+
+4. **Execute testes:**
+   ```bash
+   cd backend
+   npm run db:test    # Testa conexão
+   npm run db:seed    # Popula dados de teste
+   npm run lint       # Verifica código
+   ```
+
+5. **Inicie o desenvolvimento:**
+   ```bash
+   # Terminal 1: Backend
+   cd backend && npm run dev
+   
+   # Terminal 2: Frontend
+   cd frontend && node server.js
+   ```
+
+6. **Acesse:**
+   - Frontend: http://localhost:3000
+   - Backend: http://localhost:3001/api/health
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+therapy/
+├── 🎯 marketing/               # Landing Page (Divulgação)
+│   ├── landing/
+│   │   └── index.html         # Site para atrair usuários
+│   └── server.js              # Dev server (porta 3000)
+│
+├── 🧠 app/                     # App Real (Frontend)
+│   └── src/
+│       ├── login.html         # Página de login (magic link)
+│       ├── dashboard.html     # Dashboard principal
+│       └── styles/            # CSS compartilhado (TODO)
+│
+├── ⚙️  backend/                 # API Express.js
+│   ├── src/
+│   │   ├── index.js           # Servidor principal
+│   │   ├── routes/            # Endpoints HTTP
+│   │   ├── controllers/       # Lógica de negócio
+│   │   ├── services/          # Integrações (Supabase, IA, etc)
+│   │   ├── middleware/        # Auth, validação
+│   │   └── database/
+│   │       ├── migrations/    # SQL migrations (6 tabelas)
+│   │       ├── seed.js        # Dados de teste
+│   │       └── supabase.js    # Cliente DB
+│   ├── .env.example           # Variáveis de exemplo
+│   └── package.json           # Dependências
+│
+├── frontend/                   # UI Landing page
+│   ├── index.html             # Landing page
+│   ├── server.js              # Dev server
+│   ├── css/                   # Estilos
+│   ├── js/                    # Scripts
+│   └── assets/                # Imagens
+│
+├── .github/
+│   └── workflows/             # GitHub Actions (CI/CD)
+│
+├── ARCHITECTURE.md            # Design do sistema
+├── CHANGELOG.md               # Histórico de mudanças
+├── SECURITY.md                # Guia de segurança
+├── user_stories.md            # Requisitos funcionais
+└── plano_detalhado_*.md       # Plano 12 sprints
+
+---
+
+## 🛠️ Tech Stack
+
+| Componente | Tecnologia | Versão | Propósito |
+|-----------|-----------|--------|----------|
+| **Backend** | Node.js + Express | 18+, 20+ | API REST |
+| **Database** | PostgreSQL (Supabase) | 15+ | Dados persistentes |
+| **Frontend** | HTML5 + CSS3 + JS Vanilla | ES6+ | UI landing page |
+| **Auth** | JWT + Magic Link | - | Autenticação |
+| **IA** (futuro) | OpenAI API | GPT-3.5/4 | Respostas automáticas |
+| **Pagamentos** (futuro) | Stripe | - | Plano premium |
+| **Bot** (futuro) | Telegram/Discord API | - | Notificações |
+| **Linting** | ESLint 8 + Prettier | - | Qualidade código |
+| **CI/CD** | GitHub Actions | - | Automação |
+| **Deploy** | Railway (backend) | - | Hospedagem |
+
+---
+
+## 📚 Documentação
+
+### Essencial
+- 📘 [ARCHITECTURE.md](ARCHITECTURE.md) - Design completo do sistema
+- 📋 [CHANGELOG.md](CHANGELOG.md) - Histórico de mudanças
+- 🔒 [SECURITY.md](SECURITY.md) - Guia de segurança
+- 📅 [Plano 12 Sprints](plano_detalhado_micro_therapy_social%20\(1\).md) - Timeline completa
+
+### Desenvolvimento
+- 🎯 [User Stories](user_stories.md) - Requisitos funcionais
+- 🤝 [CONTRIBUTING.md](CONTRIBUTING.md) - Como contribuir
+- 🐳 [GitHub Setup](GITHUB_SETUP.md) - Setup inicial GitHub
+
+---
+
+## ✨ Features (Por Sprint)
+
+### Sprint 1 ✅ Completo
+- [x] Prototipagem (Notion + Discord)
+- [x] Repositório Git + CI/CD
+- [x] Landing page estática
+- [x] Formulário HTML com validações
+- [x] Database schema (6 tabelas)
+- [x] Seed data para testes
+
+### Sprint 2 🚀 Próximo
+- [ ] Autenticação (Magic Link)
+- [ ] Endpoints CRUD de posts
+- [ ] Sistema de pontos
+- [ ] Swagger/OpenAPI docs
+- [ ] Testes unitários
+
+### Sprint 3-4
+- [ ] Bot Telegram/Discord
+- [ ] Frontend dinâmico (feed, perfil, ranking)
+- [ ] Real-time updates
+
+### Sprint 5-8
+- [ ] Stripe integration (pagamentos)
+- [ ] OpenAI (respostas inteligentes)
+- [ ] Badges e gamificação avançada
+- [ ] Analytics
+
+### Sprint 9-12
+- [ ] LGPD/GDPR compliance
+- [ ] Otimizações de performance
+- [ ] Public beta launch
+- [ ] Marketing e crescimento
+
+---
+
+## 🔐 Segurança
+
+**Atenção:** Antes de usar em produção:
+
+- ✅ Configure HTTPS/SSL
+- ✅ Ative rate limiting
+- ✅ Implemente validação de inputs
+- ✅ Use variáveis de ambiente para secrets
+- ✅ Configure row-level security no Supabase
+- ✅ Implemente audit logs
+- ✅ Faça backups regulares
+
+Ver [SECURITY.md](SECURITY.md) para mais detalhes.
+
+---
+
+## 💡 Contribuindo
+
+Quer ajudar? Veja [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Padrões de código
+- ESLint + Prettier (automático com pre-commit)
+- Commits semânticos (`feat:`, `fix:`, `docs:`, etc)
+- PRs requerem review
+- Testes para novos features
+
+---
+
+## 📞 Contato & Suporte
+
+- 👤 **Desenvolvedor:** [@sergiomelodesenvolvedor](https://github.com/sergiomelodesenvolvedor)
+- 📧 **Email:** [seu-email@example.com]
+- 🐙 **GitHub Issues:** [Reportar bug ou sugerir feature](../../issues)
+- 💬 **Comunidade:** [Discord Server] (futuro)
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a **MIT License** - veja [LICENSE](LICENSE) para detalhes.
+
+---
+
+## 🙏 Agradecimentos
+
+- Inspiração: apps como Replika, Woebot, Youper
+- Tech: Supabase, OpenAI, Stripe
+- Comunidade: Open source maintainers
+
+---
+
+## 📊 Status do Projeto
+
+```
+Sprint 1  [████████████████] 100% ✅ Complete (04 Dec 2025)
+Sprint 2  [              ] 0%   🚀 Up Next (22 Dec 2025)
+Sprint 3  [              ] 0%
+Sprint 4  [              ] 0%
+...
+Sprint 12 [              ] 0%   Target: 25 May 2026
+```
+
+---
+
+**Versão Atual:** 0.1.0-alpha  
+**Última Atualização:** 04 December 2025  
+**Mantenedor:** @sergiomelodesenvolvedor
+
 - **Telegram** ou **Discord** (notificações)
 - **Webhooks** (comunicação com API)
 
