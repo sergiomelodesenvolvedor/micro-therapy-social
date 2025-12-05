@@ -1,0 +1,20 @@
+{
+  "name": "micro-therapy-frontend",
+  "version": "0.1.0",
+  "description": "Frontend para Micro Therapy Social",
+  "type": "module",
+  "scripts": {
+    "start": "http-server -p 3000 -c-1",
+    "dev": "http-server -p 3000 -c-1"
+  },
+  "keywords": [
+    "mental-health",
+    "therapy",
+    "frontend"
+  ],
+  "author": "Sergio Melo",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

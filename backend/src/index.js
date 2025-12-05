@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 // Importar rotas
 import healthRoutes from './routes/health.js';
+import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import postRoutes from './routes/posts.js';
 
@@ -22,7 +23,13 @@ app.use(morgan('dev'));
 // CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3001',
+    ],
     credentials: true,
   })
 );
@@ -33,6 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rotas
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
@@ -44,6 +52,7 @@ app.get('/', (req, res) => {
     status: 'running',
     endpoints: {
       health: '/api/health',
+      auth: '/api/auth',
       users: '/api/users',
       posts: '/api/posts',
     },

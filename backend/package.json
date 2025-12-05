@@ -1,12 +1,14 @@
 {
   "name": "micro-therapy-backend",
   "version": "0.1.0",
+  "type": "module",
   "description": "Backend API para Micro Therapy Social",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "db:migrate": "node src/database/migrations/auto-run.js",
     "db:seed": "node src/database/seed.js",
     "db:test": "node src/database/test-connection.js",
     "lint": "eslint .",
@@ -38,7 +40,9 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.7",
     "pg": "^8.13.1"
   },
   "engines": {

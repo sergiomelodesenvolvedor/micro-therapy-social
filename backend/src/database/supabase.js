@@ -3,8 +3,10 @@
  * Conexão com o banco de dados Supabase (PostgreSQL)
  */
 
-require('dotenv').config();
-const { createClient } = require('@supabase/supabase-js');
+import dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+
+dotenv.config();
 
 // Validação das variáveis de ambiente
 if (!process.env.SUPABASE_URL) {
@@ -16,7 +18,7 @@ if (!process.env.SUPABASE_KEY) {
 }
 
 // Criar cliente Supabase
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, {
+export const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
@@ -27,7 +29,7 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 /**
  * Testa a conexão com o banco de dados
  */
-async function testConnection() {
+export async function testConnection() {
   try {
     const { error } = await supabase.from('users').select('count').limit(1);
 
@@ -47,7 +49,7 @@ async function testConnection() {
 /**
  * Helper para queries paginadas
  */
-async function paginatedQuery(
+export async function paginatedQuery(
   table,
   { page = 1, limit = 10, orderBy = 'data_criacao', ascending = false }
 ) {
@@ -74,9 +76,3 @@ async function paginatedQuery(
     },
   };
 }
-
-module.exports = {
-  supabase,
-  testConnection,
-  paginatedQuery,
-};
